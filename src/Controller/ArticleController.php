@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ArticleController
+class ArticleController extends AbstractController
 {
     /**
      * @Route("/")
@@ -22,11 +23,16 @@ class ArticleController
      */
     public function show(string $slug)
     {
-        return new Response(
-            sprintf(
-                'Article: %s',
-                ucwords(str_replace('-', ' ', $slug))
-            )
-        );
+        $comments = [
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam',
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+        ];
+
+        return $this->render('articles/show.html.twig', [
+            'article' => ucwords(str_replace('-', ' ', $slug)),
+            'comments' => $comments,
+        ]);
     }
 }
