@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleController extends AbstractController
 {
     /**
-     * @Route("/")
+     * @Route("/", name="app_homepage")
      */
     public function homepage()
     {
@@ -18,7 +18,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/articles/{slug}")
+     * @Route("/articles/{slug}", name="app_article_show")
      */
     public function show(string $slug)
     {
