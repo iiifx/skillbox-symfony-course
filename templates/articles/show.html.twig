@@ -32,8 +32,9 @@
                                     <div class="text-muted align-self-center ml-4">
                                         26 days ago
                                     </div>
-                                    <div class="text-muted align-self-center ml-4 article-detail-hearts">
-                                        120
+                                    <div class="text-muted align-self-center ml-4 article-detail-hearts"
+                                         data-item="likes" data-mode="like">
+                                        <span data-item="likesCount">0</span>
                                         <i class="far fa-heart text-danger"></i>
                                     </div>
                                 </div>
@@ -133,4 +134,9 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/like.js') }}"></script>
 {% endblock %}
