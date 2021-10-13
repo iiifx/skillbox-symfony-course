@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 $(() => {
     $('[data-item=likes]').each(function () {
         const $container = $(this);
