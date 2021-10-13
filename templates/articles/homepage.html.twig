@@ -21,6 +21,35 @@
                         </div>
                     </div>
 
+                    {% for article in articles %}
+                        <div class="article-container mb-2">
+                            <div class="row no-gutters border rounded-lg overflow-hidden flex-md-row mb-4 shadow-sm position-relative">
+                                <div class="col-auto d-none d-lg-block">
+                                    <img class="article-img" src="{{ asset(article.image) }}">
+                                </div>
+                                <a class="col p-2 px-4 d-flex flex-column article-item" href="{{ path('app_article_show', {slug: article.slug}) }}">
+                                    <h5 class="mb-2">
+                                        {{ article.title }}
+                                        <span class="badge badge-info article-comments">5 комментов</span>
+                                    </h5>
+                                    <div class="mb-2 d-flex">
+                                        <span class="badge badge-pill badge-secondary mr-2">Дрындулет</span>
+                                        <span class="badge badge-pill badge-secondary mr-2">Карета</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="text-muted align-self-center">
+                                            <img class="article-author-img rounded-circle"
+                                                 src="https://robohash.org/Николай.png?set=set4">
+                                            Николай
+                                        </div>
+                                        <div class="text-muted align-self-center">26 days ago</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+<!--
                     <div class="article-container mb-2">
                         <div class="row no-gutters border rounded-lg overflow-hidden flex-md-row mb-4 shadow-sm position-relative">
                             <div class="col-auto d-none d-lg-block">
@@ -72,7 +101,6 @@
                         </div>
                     </div>
 
-
                     <div class="article-container mb-2">
                         <div class="row no-gutters border rounded-lg overflow-hidden flex-md-row mb-4 shadow-sm position-relative">
                             <div class="col-auto d-none d-lg-block">
@@ -98,7 +126,6 @@
                             </a>
                         </div>
                     </div>
-
 
                     <div class="article-container mb-2">
                         <div class="row no-gutters border rounded-lg overflow-hidden flex-md-row mb-4 shadow-sm position-relative">
@@ -149,6 +176,7 @@
                             </a>
                         </div>
                     </div>
+-->
                 </div>
 
                 <div class="col-sm-12 col-md-4 text-center">
