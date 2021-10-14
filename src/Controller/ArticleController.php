@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Service\ArticlesService;
+use App\Service\ArticleProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -11,7 +11,7 @@ class ArticleController extends AbstractController
     /**
      * @Route("/", name="app_homepage")
      */
-    public function homepage(ArticlesService $articles)
+    public function homepage(ArticleProvider $articles)
     {
         return $this->render('articles/homepage.html.twig', [
             'articles' => $articles->getArticles(),
@@ -21,7 +21,7 @@ class ArticleController extends AbstractController
     /**
      * @Route("/articles/{slug}", name="app_article_show")
      */
-    public function show(string $slug, ArticlesService $articles)
+    public function show(string $slug, ArticleProvider $articles)
     {
         $comments = [
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',

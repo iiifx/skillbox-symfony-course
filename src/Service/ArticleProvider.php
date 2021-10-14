@@ -6,7 +6,7 @@ namespace App\Service;
 
 use App\Entity\Article;
 
-class ArticlesService
+class ArticleProvider
 {
     public function getArticle(): Article
     {
