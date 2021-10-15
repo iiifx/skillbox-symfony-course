@@ -24,5 +24,7 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    articles_service:
-        class: App\Service\ArticlesService
+    article_provider:
+        class: App\Service\ArticleProvider
+#    parsedown:
+#        class: Demontpx\ParsedownBundle\Parsedown
