@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article\ArticleParseDecorator;
 use App\Service\ArticleProvider;
+use App\Service\MarkdownParser;
 use Demontpx\ParsedownBundle\Parsedown;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
@@ -26,7 +27,7 @@ class ArticleController extends AbstractController
     /**
      * @Route("/articles/{slug}", name="app_article_show")
      */
-    public function show(string $slug, ArticleProvider $articles, Parsedown $parsedown, AdapterInterface $cache)
+    public function show(string $slug, ArticleProvider $articles, MarkdownParser $parser)
     {
         $comments = [
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
@@ -35,14 +36,18 @@ class ArticleController extends AbstractController
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
         ];
 
-        $article = new ArticleParseDecorator(
-            $articles->getArticle(),
-            $parsedown,
-            $cache
-        );
+        //$article = new ArticleParseDecorator(
+        //    $articles->getArticle(),
+        //    $parsedown,
+        //    $cache
+        //);
+
+        $article = $articles->getArticle();
+        $content = $parser->parse($article->getContent());
 
         return $this->render('articles/show.html.twig', [
             'article' => $article,
+            'content' => $content,
             'comments' => $comments,
         ]);
     }
