@@ -16,6 +16,8 @@ class ArticleController extends AbstractController
      */
     public function homepage(ArticleProvider $articles)
     {
+        //dd($this->getParameter('app.example_email'));
+
         return $this->render('articles/homepage.html.twig', [
             'articles' => $articles->getArticles(),
         ]);
