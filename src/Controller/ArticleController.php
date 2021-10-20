@@ -2,12 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Article\ArticleParseDecorator;
 use App\Service\ArticleProvider;
 use App\Service\MarkdownParser;
-use Demontpx\ParsedownBundle\Parsedown;
+use App\Service\SlackService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleController extends AbstractController
@@ -27,8 +25,10 @@ class ArticleController extends AbstractController
     /**
      * @Route("/articles/{slug}", name="app_article_show")
      */
-    public function show(string $slug, ArticleProvider $articles, MarkdownParser $parser)
+    public function show(string $slug, ArticleProvider $articles, MarkdownParser $parser, SlackService $slack)
     {
+        //$slack->sendMessage('This is an amazing message!');
+
         $comments = [
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam',
