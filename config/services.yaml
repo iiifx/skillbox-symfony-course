@@ -8,6 +8,7 @@ parameters:
     app.example_zone: '%env(APP_EXAMPLE_ZONE)%'
     app.example_email: '%env(APP_EXAMPLE_EMAIL)%'
     cache_adapter: cache.adapter.filesystem
+    secret_value: '%env(SECRET_VALUE)%'
 
 services:
     # default configuration for services in *this* file
