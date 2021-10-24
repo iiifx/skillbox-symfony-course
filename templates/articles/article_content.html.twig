@@ -1,0 +1,40 @@
+{% extends 'base_content.html.twig' %}
+
+{% block title %}Генерация контента статьи{% endblock %}
+
+{% block content %}
+    <h1>Генерация контента статьи</h1>
+
+    <form>
+        <div class="input-group mb-3">
+            <input type="number"
+                   name="paragraphs"
+                   class="form-control"
+                   placeholder="Кол-во параграфов"
+                   value="{{ app.request.query.get('paragraphs') }}">
+            <input type="text"
+                   name="word"
+                   class="form-control"
+                   placeholder="Слово"
+                   value="{{ app.request.query.get('word') }}">
+            <input type="number"
+                   name="wordCount"
+                   class="form-control"
+                   placeholder="Кол-во слов"
+                   value="{{ app.request.query.get('wordCount') }}">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-outline-secondary">
+                    <i class="fa fa-save"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    {% if content %}
+        <div class="col-sm-12 article-detail">
+            <div class="col-12 mt-2 mb-4">
+                {{ content|markdown_cached }}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

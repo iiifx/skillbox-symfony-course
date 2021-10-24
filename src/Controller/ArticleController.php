@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Homework\ArticleContentProviderInterface;
 use App\Service\ArticleProvider;
-use App\Service\MarkdownParser;
 use App\Service\SlackService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,12 +24,30 @@ class ArticleController extends AbstractController
     }
 
     /**
+     * @Route("/articles/article_content", name="app_article_content")
+     */
+    public function content(Request $request, ArticleContentProviderInterface $provider)
+    {
+        $content = '';
+        if ($paragraphs = (int)$request->query->get('paragraphs')) {
+            $content = $provider->get(
+                $paragraphs,
+                $request->query->get('word'),
+                (int)$request->query->get('wordCount')
+            );
+        }
+
+        return $this->render('articles/article_content.html.twig', [
+            'content' => $content,
+        ]);
+    }
+
+    /**
      * @Route("/articles/{slug}", name="app_article_show")
      */
     public function show(
         string $slug,
         ArticleProvider $articles,
-        MarkdownParser $parser,
         SlackService $slack,
         ArticleContentProviderInterface $provider
     ) {
@@ -57,8 +74,7 @@ class ArticleController extends AbstractController
 
         # Генерируем текст с 2-10 параграфов включая полученное слово
         $content = $provider->get(random_int(2, 10), ...$wordData);
-        $content = $parser->parse($content);
-
+        //$content = $parser->parse($content);
 
         $comments = [
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
