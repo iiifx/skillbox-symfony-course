@@ -24,6 +24,25 @@ class ArticleController extends AbstractController
     }
 
     /**
+     * @Route("/articles/article_content", name="app_article_content")
+     */
+    public function content(Request $request, ArticleContentProviderInterface $provider)
+    {
+        $content = '';
+        if ($paragraphs = (int)$request->query->get('paragraphs')) {
+            $content = $provider->get(
+                $paragraphs,
+                $request->query->get('word'),
+                (int)$request->query->get('wordCount')
+            );
+        }
+
+        return $this->render('articles/article_content.html.twig', [
+            'content' => $content,
+        ]);
+    }
+
+    /**
      * @Route("/articles/{slug}", name="app_article_show")
      */
     public function show(
