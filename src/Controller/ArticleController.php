@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Homework\ArticleContentProviderInterface;
 use App\Service\ArticleProvider;
-use App\Service\MarkdownParser;
 use App\Service\SlackService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +29,6 @@ class ArticleController extends AbstractController
     public function show(
         string $slug,
         ArticleProvider $articles,
-        MarkdownParser $parser,
         SlackService $slack,
         ArticleContentProviderInterface $provider
     ) {
@@ -57,8 +55,7 @@ class ArticleController extends AbstractController
 
         # Генерируем текст с 2-10 параграфов включая полученное слово
         $content = $provider->get(random_int(2, 10), ...$wordData);
-        $content = $parser->parse($content);
-
+        //$content = $parser->parse($content);
 
         $comments = [
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',

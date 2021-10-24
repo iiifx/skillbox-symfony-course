@@ -30,7 +30,7 @@ class MarkdownParser
                 $this->logger->info('Lorem found!');
             }
 
-            return $this->parsedown->parse($content);
+            //return $this->parsedown->parse($content);
         }
 
         return $this->cache->get(
