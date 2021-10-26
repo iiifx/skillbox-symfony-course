@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Homework\ArticleContentProviderInterface;
+use App\Repository\ArticleRepository;
 use App\Service\ArticleProvider;
 use App\Service\SlackService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,12 +16,12 @@ class ArticleController extends AbstractController
     /**
      * @Route("/", name="app_homepage")
      */
-    public function homepage(ArticleProvider $articles)
+    public function homepage(ArticleRepository $repository)
     {
         //dd($this->getParameter('secret_value'));
 
         return $this->render('articles/homepage.html.twig', [
-            'articles' => $articles->getArticles(),
+            'articles' => $repository->findLatestPublished(),
         ]);
     }
 

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,32 +20,58 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
-    // /**
-    //  * @return Article[] Returns an array of Article objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Article[]
+     */
+    public function findLatestPublished(): array
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
+        $builder = $this->publishedOnly();
+        $builder = $this->orderLatest($builder);
+
+        return $builder
             ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Article
+    /**
+     * @return Article[]
+     */
+    public function findPublished(): array
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->publishedOnly()
+            ->setMaxResults(10)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
+
+    /**
+     * @return Article[]
+     */
+    public function findLatest(): array
+    {
+        return $this->orderLatest()
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
+    protected function publishedOnly(QueryBuilder $builder = null): QueryBuilder
+    {
+        $builder ??= $this->queryBuilder();
+
+        return $builder->andWhere('a.publishedAt IS NOT NULL');
+    }
+
+    protected function orderLatest(QueryBuilder $builder = null): QueryBuilder
+    {
+        $builder ??= $this->queryBuilder();
+
+        return $builder->orderBy('a.publishedAt', 'DESC');
+    }
+
+    protected function queryBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder('a');
+    }
 }
