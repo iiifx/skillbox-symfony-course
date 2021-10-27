@@ -45,6 +45,14 @@ class Article
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $imageFilename = null;
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private ?string $description = null;
+    /**
+     * @ORM\Column(type="array")
+     */
+    private array $keywords = [];
 
     public function getId(): ?int
     {
@@ -158,6 +166,30 @@ class Article
     public function removeLike(int $count = 1): static
     {
         $this->likeCount -= $count;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getKeywords(): ?array
+    {
+        return $this->keywords;
+    }
+
+    public function setKeywords(array $keywords): self
+    {
+        $this->keywords = $keywords;
 
         return $this;
     }

@@ -3,29 +3,40 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Article;
+use App\Service\ArticleContentProvider;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleController extends AbstractController
 {
-    /**
-     * @throws Exception
-     */
-    #[Route('/admin/article/create', name: 'app_admin_article_create')]
-    public function create(EntityManagerInterface $em): Response
+    #[Route('/admin/articles/create', name: 'app_admin_article_create')]
+    public function create(EntityManagerInterface $em, ArticleContentProvider $provider): Response
     {
         $article = new Article();
 
+        $paragraphs = random_int(2, 10);
+        $wordParams = random_int(1, 10) >= 7 ? ['WORD', 5] : [];
+        $content = $provider->get($paragraphs, ...$wordParams);
+
+        $article->setBody($content);
         $article->setTitle('Article title');
         $article->setSlug('article-slug-' . random_int(100, 999));
-        $article->setBody(
-            '- Lorem **ipsum** dolor sit amet, ~~consectetur~~ adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Purus sit amet luctus venenatis lectus magna fringilla urna porttitor. Sit amet cursus sit amet. Mattis molestie a iaculis at erat. Quis auctor elit sed vulputate mi. Vulputate dignissim suspendisse in est ante in nibh. Sed augue lacus viverra vitae. At in tellus integer feugiat scelerisque varius morbi. Tortor at risus viverra adipiscing at in. Rhoncus urna neque viverra justo nec ultrices.',
-        );
+        $article->setDescription('Sit amet cursus sit amet. Mattis molestie a iaculis at erat');
 
+        $article->setAuthor('Author');
+        $article->setLikeCount(random_int(-99, 99));
+        $article->setImageFilename('car1.jpg');
+
+        if (random_int(1, 10) <= 6) {
+            $article->setKeywords([
+                'One',
+                'Two',
+                'Three',
+            ]);
+        }
         if (random_int(1, 10) <= 6) {
             $article->setPublishedAt(
                 new DateTimeImmutable(
@@ -33,10 +44,6 @@ class ArticleController extends AbstractController
                 )
             );
         }
-
-        $article->setAuthor('Author')
-            ->setLikeCount(random_int(0, 99))
-            ->setImageFilename('car1.jpg');
 
         $em->persist($article);
         $em->flush();
