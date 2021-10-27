@@ -34,6 +34,10 @@ class ArticleController extends AbstractController
             );
         }
 
+        $article->setAuthor('Author')
+            ->setLikeCount(random_int(0, 99))
+            ->setImageFilename('car1.jpg');
+
         $em->persist($article);
         $em->flush();
 

@@ -33,6 +33,18 @@ class Article
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private ?DateTimeImmutable $publishedAt = null;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $author = null;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private ?int $likeCount = null;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $imageFilename = null;
 
     public function getId(): ?int
     {
@@ -83,6 +95,69 @@ class Article
     public function setPublishedAt(?DateTimeImmutable $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?string
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?string $author): self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    public function getLikeCount(): ?int
+    {
+        return $this->likeCount;
+    }
+
+    public function setLikeCount(?int $likeCount): self
+    {
+        $this->likeCount = $likeCount;
+
+        return $this;
+    }
+
+    public function getImageFilename(): ?string
+    {
+        return $this->imageFilename;
+    }
+
+    public function setImageFilename(?string $imageFilename): self
+    {
+        $this->imageFilename = $imageFilename;
+
+        return $this;
+    }
+
+    public function getImagePath(): string
+    {
+        return sprintf('images/%s', $this->getImageFilename());
+    }
+
+    public function getAuthorAvatarPath(): string
+    {
+        return sprintf(
+            'https://robohash.org/%s.png?set=set4',
+            str_replace(' ', '-', $this->getAuthor())
+        );
+    }
+
+    public function addLike(int $count = 1): static
+    {
+        $this->likeCount += $count;
+
+        return $this;
+    }
+
+    public function removeLike(int $count = 1): static
+    {
+        $this->likeCount -= $count;
 
         return $this;
     }

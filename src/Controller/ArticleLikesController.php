@@ -2,7 +2,8 @@
 
 namespace App\Controller;
 
-use Psr\Log\LoggerInterface;
+use App\Entity\Article;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -11,17 +12,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleLikesController extends AbstractController
 {
     /**
-     * @Route("/articles/{articleId<\d+>}/likes", name="app_article_like_change", methods={"PUT","DELETE"})
+     * @Route("/articles/{slug<(\w|-)+>}/likes", name="app_article_like_change", methods={"PUT","DELETE"})
      */
-    public function change(string $articleId, Request $request, LoggerInterface $logger)
+    public function change(Article $article, Request $request, EntityManagerInterface $em)
     {
-        $likes = match ($request->getMethod()) {
-            Request::METHOD_PUT => 1,
-            Request::METHOD_DELETE => 0,
+        if ($request->getMethod() === Request::METHOD_PUT) {
+            $article->addLike();
+        } elseif ($request->getMethod() === Request::METHOD_DELETE) {
+            $article->removeLike();
+        } else {
+            throw new BadRequestHttpException('Bad request');
+        }
 
-            default => throw new BadRequestHttpException('Bad request'),
-        };
+        $em->flush();
 
-        return $this->json(['likes' => $likes]);
+        return $this->json(['likes' => $article->getLikeCount()]);
     }
 }
