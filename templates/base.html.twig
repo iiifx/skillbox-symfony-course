@@ -11,6 +11,10 @@
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
 
+    {% block keywords %}
+        <meta name="keywords" content="{% block keywords_content %}Project{% endblock %}" />
+    {% endblock %}
+
     <title>{% block title %}Project{% endblock %}</title>
 </head>
 <body>

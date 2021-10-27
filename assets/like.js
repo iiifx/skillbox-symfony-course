@@ -8,9 +8,10 @@ $(() => {
             e.preventDefault();
 
             const mode = $container.data('mode');
+            const url = $container.data('url');
 
             $.ajax({
-                url: '/articles/10/likes',
+                url: url,
                 method: mode === 'like' ? 'PUT' : 'DELETE'
             }).then(function (data) {
                 $container.data('mode', mode === 'like' ? 'dislike' : 'like')

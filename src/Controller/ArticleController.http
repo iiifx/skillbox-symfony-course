@@ -1,9 +1,0 @@
-###
-POST https://localhost:8000/api/v1/article_content
-Accept: application/json
-
-{
-  "paragraphs": 3,
-  "word": "HELLO",
-  "wordCount": 5
-}
