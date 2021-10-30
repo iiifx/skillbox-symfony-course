@@ -33,9 +33,14 @@ class ArticleFixtures extends BaseFixtures
         'Mollit',
     ];
     protected array $articleImages = [
-        'car1.jpg',
-        'car2.jpg',
-        'car3.jpeg',
+        'dogs/01.jpg',
+        'dogs/02.jpg',
+        'dogs/03.jpg',
+        'dogs/04.jpg',
+        'dogs/05.jpg',
+        'dogs/06.jpg',
+        'dogs/07.jpg',
+        'dogs/08.jpg',
     ];
 
     public function loadData(ObjectManager $manager): void
