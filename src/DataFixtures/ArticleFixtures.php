@@ -48,7 +48,7 @@ class ArticleFixtures extends BaseFixtures
             $article->setBody($content);
             $article->setTitle($this->faker->randomElement($this->articleTitles));
 
-            $article->setSlug(sprintf('article-slug-%d', $this->faker->numberBetween(1, 100000)));
+            //$article->setSlug(sprintf('article-slug-%d', $this->faker->numberBetween(1, 100000)));
             $article->setDescription($this->faker->words(3, true));
 
             $article->setAuthor($this->faker->randomElement($this->articleAuthors));
