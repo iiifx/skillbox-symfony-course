@@ -7,6 +7,7 @@ use App\Trait\Entity\TimestampableEntity;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -61,7 +62,8 @@ class Article
      */
     private array $keywords = [];
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article")
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article", fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"createdAt"= "DESC"})
      */
     private Collection $comments;
 
@@ -215,6 +217,20 @@ class Article
      */
     public function getComments(): Collection
     {
+        return $this->comments;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getNonDeletedComments(): Collection
+    {
+        //$criteria = Criteria::create()
+        //    ->andWhere(Criteria::expr()?->isNull('deletedAt'))
+        //    ->orderBy(['createdAt', 'DESC']);
+        //
+        //return $this->comments->matching($criteria);
+
         return $this->comments;
     }
 

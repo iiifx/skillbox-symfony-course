@@ -3,15 +3,19 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
+use App\Trait\Entity\SoftDeleteableEntity;
 use App\Trait\Entity\TimestampableEntity;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class Comment
 {
     use TimestampableEntity;
+    use SoftDeleteableEntity;
 
     /**
      * @ORM\Id

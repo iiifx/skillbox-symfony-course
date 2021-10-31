@@ -30,7 +30,9 @@
                                 <a class="col p-2 px-4 d-flex flex-column article-item" href="{{ path('app_article_show', {slug: article.slug}) }}">
                                     <h5 class="mb-2">
                                         {{ article.title }}
-                                        <span class="badge badge-info article-comments">5 комментов</span>
+                                        <span class="badge badge-info article-comments">
+                                            {{ article.nonDeletedComments|length }} комментов
+                                        </span>
                                     </h5>
                                     <div class="mb-2 d-flex">
                                         {% for keyword in article.keywords %}

@@ -79,7 +79,14 @@ class ArticleFixtures extends BaseFixtures
                     $comment
                         ->setAuthorName($this->faker->randomElement($this->articleAuthors))
                         ->setContent($this->articleContentProvider->get(1))
+                        ->setCreatedAt(
+                            DateTimeImmutable::createFromMutable($this->faker->dateTimeBetween('-100 days', '-1 days'))
+                        )
                         ->setArticle($article);
+
+                    if ($this->faker->boolean()) {
+                        $comment->setDeletedAt(new DateTimeImmutable());
+                    }
 
                     $this->manager->persist($comment);
                 }

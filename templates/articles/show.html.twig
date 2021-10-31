@@ -48,7 +48,7 @@
 
     <div class="col-sm-12 mb-4">
         <h3>
-            <i class="pr-3 far fa-comment text-secondary"></i>{{ article.comments|length }}
+            <i class="pr-3 far fa-comment text-secondary"></i>{{ article.nonDeletedComments|length }}
             Комментария
         </h3>
         <hr>
@@ -66,7 +66,7 @@
             </div>
         </div>
 
-        {% for comment in article.comments %}
+        {% for comment in article.nonDeletedComments %}
             {{ include('articles/_article_comment.html.twig') }}
         {% endfor %}
     </div>
