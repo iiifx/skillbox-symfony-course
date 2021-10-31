@@ -20,15 +20,30 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
+    public function findBySlug(string $slug, bool $publishedOnly = true): ?Article
+    {
+        $qb = $this->queryBuilder();
+
+        if ($publishedOnly) {
+            $qb = $this->publishedOnly($qb);
+        }
+
+        return $qb
+            ->andWhere('a.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     /**
      * @return Article[]
      */
     public function findLatestPublished(): array
     {
-        $builder = $this->publishedOnly();
-        $builder = $this->orderLatest($builder);
+        $qb = $this->publishedOnly();
+        $qb = $this->orderLatest($qb);
 
-        return $builder
+        return $qb
             ->setMaxResults(10)
             ->getQuery()
             ->getResult();
@@ -56,22 +71,24 @@ class ArticleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    protected function publishedOnly(QueryBuilder $builder = null): QueryBuilder
+    protected function publishedOnly(QueryBuilder $qb = null): QueryBuilder
     {
-        $builder ??= $this->queryBuilder();
+        $qb ??= $this->queryBuilder();
 
-        return $builder->andWhere('a.publishedAt IS NOT NULL');
+        return $qb->andWhere('a.publishedAt IS NOT NULL');
     }
 
-    protected function orderLatest(QueryBuilder $builder = null): QueryBuilder
+    protected function orderLatest(QueryBuilder $qb = null): QueryBuilder
     {
-        $builder ??= $this->queryBuilder();
+        $qb ??= $this->queryBuilder();
 
-        return $builder->orderBy('a.publishedAt', 'DESC');
+        return $qb->orderBy('a.publishedAt', 'DESC');
     }
 
     protected function queryBuilder(): QueryBuilder
     {
-        return $this->createQueryBuilder('a');
+        return $this->createQueryBuilder('a')
+            ->innerJoin('a.comments', 'c')
+            ->addSelect('c');
     }
 }

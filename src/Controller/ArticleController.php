@@ -2,38 +2,44 @@
 
 namespace App\Controller;
 
-use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleController extends AbstractController
 {
+    protected ArticleRepository $articles;
+    protected CommentRepository $comments;
+
+    public function __construct(ArticleRepository $articles, CommentRepository $comments)
+    {
+        $this->articles = $articles;
+        $this->comments = $comments;
+    }
+
     /**
      * @Route("/", name="app_homepage")
      */
-    public function homepage(ArticleRepository $repository)
+    public function homepage()
     {
         return $this->render('articles/homepage.html.twig', [
-            'articles' => $repository->findLatestPublished(),
+            'articles' => $this->articles->findLatestPublished(),
+            'latestComments' => $this->comments->findLatestPublished(3),
         ]);
     }
 
     /**
      * @Route("/articles/{slug}", name="app_article_show")
      */
-    public function show(Article $article)
+    public function show(string $slug)
     {
-        $comments = [
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam',
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-        ];
+        if (!$article = $this->articles->findBySlug($slug)) {
+            throw $this->createNotFoundException();
+        }
 
         return $this->render('articles/show.html.twig', [
             'article' => $article,
-            'comments' => $comments,
         ]);
     }
 }

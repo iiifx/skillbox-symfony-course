@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Service\ArticleContentProvider;
+use App\Service\CommentContentProvider;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -11,15 +12,19 @@ use Faker\Generator;
 abstract class BaseFixtures extends Fixture
 {
     protected ArticleContentProvider $articleContentProvider;
+    protected CommentContentProvider $commentContentProvider;
     protected Generator $faker;
     protected ObjectManager $manager;
 
     /**
      * @required
      */
-    public function setArticleContentProvider(ArticleContentProvider $articleContentProvider): void
-    {
+    public function setProviders(
+        ArticleContentProvider $articleContentProvider,
+        CommentContentProvider $commentContentProvider
+    ): void {
         $this->articleContentProvider = $articleContentProvider;
+        $this->commentContentProvider = $commentContentProvider;
     }
 
     public function load(ObjectManager $manager): void

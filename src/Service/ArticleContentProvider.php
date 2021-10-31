@@ -9,6 +9,7 @@ use App\Homework\ArticleContentProviderInterface;
 class ArticleContentProvider implements ArticleContentProviderInterface
 {
     protected bool $boldWords = false;
+    protected PasteWordsService $pasteWordsService;
 
     protected array $contents = [
         '- Lorem **ipsum** dolor sit amet, ~~consectetur~~ adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Purus sit amet luctus venenatis lectus magna fringilla urna porttitor. Sit amet cursus sit amet. Mattis molestie a iaculis at erat. Quis auctor elit sed vulputate mi. Vulputate dignissim suspendisse in est ante in nibh. Sed augue lacus viverra vitae. At in tellus integer feugiat scelerisque varius morbi. Tortor at risus viverra adipiscing at in. Rhoncus urna neque viverra justo nec ultrices.',
@@ -23,11 +24,11 @@ class ArticleContentProvider implements ArticleContentProviderInterface
         '- Turpis massa ~~tincidunt~~ dui ut **ornare** lectus. Nisi est sit amet facilisis magna etiam tempor. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Aliquam purus sit amet luctus venenatis. Dignissim diam quis enim lobortis scelerisque fermentum dui. Aliquet nibh praesent tristique magna sit amet purus gravida quis. Mauris augue neque gravida in fermentum et sollicitudin. Arcu odio ut sem nulla pharetra diam sit amet nisl. Leo in vitae turpis massa sed elementum tempus. Leo in vitae turpis massa sed. Lectus vestibulum mattis ullamcorper velit. Aliquam nulla facilisi cras fermentum odio eu feugiat. Molestie a iaculis at erat pellentesque adipiscing commodo.',
     ];
 
-    public function __construct(bool $boldWords)
+    public function __construct(bool $boldWords, PasteWordsService $pasteWordsService)
     {
         $this->boldWords = $boldWords;
+        $this->pasteWordsService = $pasteWordsService;
     }
-
 
     public function get(int $paragraphs, string $word = null, int $wordsCount = 0): string
     {
@@ -38,7 +39,9 @@ class ArticleContentProvider implements ArticleContentProviderInterface
         $content = $this->createContent($paragraphs);
 
         if (null !== $word && $wordsCount > 0) {
-            $content = $this->addWords($content, $word, $wordsCount);
+            $word = $this->boldWords ? "**$word**" : "_{$word}_";
+
+            $content = $this->pasteWordsService->paste($content, $word, $wordsCount);
         }
 
         return $content;
@@ -55,22 +58,5 @@ class ArticleContentProvider implements ArticleContentProviderInterface
         } while (--$paragraphs);
 
         return $content;
-    }
-
-    private function addWords(string $content, string $word, int $wordsCount): string
-    {
-        $parts = explode(' ', $content);
-        $word = $this->boldWords ? "**$word**" : "_{$word}_";
-
-        do {
-            $position = random_int(0, count($parts) - 1);
-
-            $begin = array_slice($parts, 0, $position);
-            $end = array_slice($parts, $position, count($parts) - 1);
-
-            $parts = array_merge($begin, [$word], $end);
-        } while (--$wordsCount);
-
-        return implode(' ', $parts);
     }
 }
