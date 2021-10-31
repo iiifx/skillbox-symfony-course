@@ -19,32 +19,26 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
-    // /**
-    //  * @return Comment[] Returns an array of Comment objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Comment[]
+     */
+    public function findAllWithSearch(?string $search, bool $showDeleted = false): array
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this->createQueryBuilder('c');
 
-    /*
-    public function findOneBySomeField($value): ?Comment
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
+        if ($search) {
+            $qb->andWhere('c.content LIKE :search OR c.authorName LIKE :search OR a.title LIKE :search')
+                ->setParameter('search', "%$search%");
+        }
+
+        if ($showDeleted) {
+            $this->getEntityManager()->getFilters()->disable('softdeleteable');
+        }
+
+        return $qb->innerJoin('c.article', 'a')
+            ->addSelect('a')
+            ->orderBy('c.createdAt', 'DESC')
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
 }
