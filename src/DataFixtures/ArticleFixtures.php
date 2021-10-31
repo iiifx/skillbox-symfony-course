@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Article;
-use App\Entity\Comment;
 use DateTimeImmutable;
 use Doctrine\Persistence\ObjectManager;
 
@@ -71,28 +70,6 @@ class ArticleFixtures extends BaseFixtures
                     )
                 );
             }
-
-            $this->createMany(
-                Comment::class,
-                $this->faker->numberBetween(2, 10),
-                function (Comment $comment) use ($article) {
-                    $wordParams = $this->faker->boolean(70) ? ['WORD', $this->faker->numberBetween(1, 5)] : [];
-
-                    $comment
-                        ->setAuthorName($this->faker->randomElement($this->articleAuthors))
-                        ->setContent($this->commentContentProvider->get(... $wordParams))
-                        ->setCreatedAt(
-                            DateTimeImmutable::createFromMutable($this->faker->dateTimeBetween('-100 days', '-1 days'))
-                        )
-                        ->setArticle($article);
-
-                    if ($this->faker->boolean()) {
-                        $comment->setDeletedAt(new DateTimeImmutable());
-                    }
-
-                    $this->manager->persist($comment);
-                }
-            );
         });
     }
 }

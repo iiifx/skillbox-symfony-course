@@ -44,7 +44,7 @@ class ArticleRepository extends ServiceEntityRepository
         $qb = $this->orderLatest($qb);
 
         return $qb
-            ->setMaxResults(10)
+            //->setMaxResults(10)
             ->getQuery()
             ->getResult();
     }
