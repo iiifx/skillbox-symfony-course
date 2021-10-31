@@ -5,7 +5,12 @@
                  src="{{ asset('images/cat-profile.png') }}">
             <div class="media-body align-self-start col-sm-6">
                 <b>{{ comment.authorName }}</b>
-                <small>{{ comment.createdAt|ago }}</small>
+                <small>
+                    {{ comment.createdAt|ago }}
+                    {% if comment.deleted %}
+                        DELETED
+                    {% endif %}
+                </small>
                 <br>
                 <span class="comment">{{ comment.content|markdown_cached }}</span>
             </div>

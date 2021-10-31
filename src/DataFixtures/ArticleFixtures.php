@@ -74,11 +74,13 @@ class ArticleFixtures extends BaseFixtures
 
             $this->createMany(
                 Comment::class,
-                $this->faker->numberBetween(1, 5),
+                $this->faker->numberBetween(2, 10),
                 function (Comment $comment) use ($article) {
+                    $wordParams = $this->faker->boolean(70) ? ['WORD', $this->faker->numberBetween(1, 5)] : [];
+
                     $comment
                         ->setAuthorName($this->faker->randomElement($this->articleAuthors))
-                        ->setContent($this->articleContentProvider->get(1))
+                        ->setContent($this->commentContentProvider->get(... $wordParams))
                         ->setCreatedAt(
                             DateTimeImmutable::createFromMutable($this->faker->dateTimeBetween('-100 days', '-1 days'))
                         )

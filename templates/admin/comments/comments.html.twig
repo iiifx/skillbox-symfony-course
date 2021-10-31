@@ -54,10 +54,10 @@
                 <td>{{ comment.authorName }}</td>
                 <td style="width: 20%;">{{ comment.content|markdown_cached|u.truncate(40, '..')|raw }}</td>
                 <td>
+                    {{ comment.createdAt|ago }}
                     {% if comment.deleted %}
                         DELETED
                     {% endif %}
-                    {{ comment.createdAt|ago }}
                 </td>
             </tr>
         {% else %}

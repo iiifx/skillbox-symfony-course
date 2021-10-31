@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Comment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -24,7 +25,7 @@ class CommentRepository extends ServiceEntityRepository
      */
     public function findAllWithSearch(?string $search, bool $showDeleted = false): array
     {
-        $qb = $this->createQueryBuilder('c');
+        $qb = $this->queryBuilder();
 
         if ($search) {
             $qb->andWhere('c.content LIKE :search OR c.authorName LIKE :search OR a.title LIKE :search')
@@ -35,10 +36,28 @@ class CommentRepository extends ServiceEntityRepository
             $this->getEntityManager()->getFilters()->disable('softdeleteable');
         }
 
-        return $qb->innerJoin('c.article', 'a')
-            ->addSelect('a')
-            ->orderBy('c.createdAt', 'DESC')
+        return $qb->orderBy('c.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @return Comment[]
+     */
+    public function findLatestPublished(int $count): array
+    {
+        $qb = $this->queryBuilder();
+
+        return $qb->orderBy('c.createdAt', 'DESC')
+            ->setMaxResults($count)
+            ->getQuery()
+            ->getResult();
+    }
+
+    private function queryBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.article', 'a')
+            ->addSelect('a');
     }
 }
