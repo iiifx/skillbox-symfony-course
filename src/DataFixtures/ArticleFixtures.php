@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Article;
+use App\Entity\Comment;
 use DateTimeImmutable;
 use Doctrine\Persistence\ObjectManager;
 
@@ -70,6 +71,19 @@ class ArticleFixtures extends BaseFixtures
                     )
                 );
             }
+
+            $this->createMany(
+                Comment::class,
+                $this->faker->numberBetween(1, 5),
+                function (Comment $comment) use ($article) {
+                    $comment
+                        ->setAuthorName($this->faker->randomElement($this->articleAuthors))
+                        ->setContent($this->articleContentProvider->get(1))
+                        ->setArticle($article);
+
+                    $this->manager->persist($comment);
+                }
+            );
         });
     }
 }

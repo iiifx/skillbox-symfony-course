@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
+use App\Trait\Entity\TimestampableEntity;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -12,6 +15,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Article
 {
+    use TimestampableEntity;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -56,15 +61,14 @@ class Article
      */
     private array $keywords = [];
     /**
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article")
      */
-    private ?DateTimeImmutable $createdAt = null;
-    /**
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime_immutable", nullable=true)
-     */
-    private ?DateTimeImmutable $updatedAt = null;
+    private Collection $comments;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -206,26 +210,32 @@ class Article
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
     {
-        return $this->createdAt;
+        return $this->comments;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function addComment(Comment $comment): self
     {
-        $this->createdAt = $createdAt;
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setArticle($this);
+        }
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function removeComment(Comment $comment): self
     {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getArticle() === $this) {
+                $comment->setArticle(null);
+            }
+        }
 
         return $this;
     }
