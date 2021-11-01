@@ -7,7 +7,6 @@ use App\Trait\Entity\TimestampableEntity;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -58,18 +57,20 @@ class Article
      */
     private ?string $description = null;
     /**
-     * @ORM\Column(type="array")
-     */
-    private array $keywords = [];
-    /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"createdAt"= "DESC"})
      */
-    private Collection $comments;
+    private $comments;
+    /**
+     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="articles", fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"createdAt"= "DESC"})
+     */
+    private $tags;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -200,18 +201,6 @@ class Article
         return $this;
     }
 
-    public function getKeywords(): ?array
-    {
-        return $this->keywords;
-    }
-
-    public function setKeywords(array $keywords): self
-    {
-        $this->keywords = $keywords;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Comment[]
      */
@@ -252,6 +241,30 @@ class Article
                 $comment->setArticle(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tag[]
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): self
+    {
+        $this->tags->removeElement($tag);
 
         return $this;
     }

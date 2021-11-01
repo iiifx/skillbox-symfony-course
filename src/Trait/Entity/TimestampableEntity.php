@@ -12,12 +12,12 @@ trait TimestampableEntity
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime_immutable")
      */
-    private ?DateTimeImmutable $createdAt;
+    private $createdAt;
     /**
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private ?DateTimeImmutable $updatedAt;
+    private $updatedAt;
 
     public function getCreatedAt(): ?DateTimeImmutable
     {

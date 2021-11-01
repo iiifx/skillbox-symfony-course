@@ -44,7 +44,7 @@ class ArticleRepository extends ServiceEntityRepository
         $qb = $this->orderLatest($qb);
 
         return $qb
-            ->setMaxResults(10)
+            //->setMaxResults(10)
             ->getQuery()
             ->getResult();
     }
@@ -89,6 +89,8 @@ class ArticleRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('a')
             ->innerJoin('a.comments', 'c')
-            ->addSelect('c');
+            ->addSelect('c')
+            ->innerJoin('a.tags', 't')
+            ->addSelect('t');
     }
 }

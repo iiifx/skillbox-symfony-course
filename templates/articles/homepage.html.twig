@@ -34,11 +34,7 @@
                                             {{ article.nonDeletedComments|length }} комментов
                                         </span>
                                     </h5>
-                                    <div class="mb-2 d-flex">
-                                        {% for keyword in article.keywords %}
-                                            <span class="badge badge-pill badge-secondary mr-2">{{ keyword }}</span>
-                                        {% endfor %}
-                                    </div>
+                                    {% include('_partial/article/article_tags.html.twig') with {tags: article.tags} %}
                                     <div class="d-flex justify-content-between">
                                         <div class="text-muted align-self-center">
                                             <img class="article-author-img rounded-circle" src="{{ article.authorAvatarPath }}">

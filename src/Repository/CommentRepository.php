@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Comment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -25,6 +26,11 @@ class CommentRepository extends ServiceEntityRepository
      */
     public function findAllWithSearch(?string $search, bool $showDeleted = false): array
     {
+        return $this->findAllWithSearchQuery($search, $showDeleted)->getResult();
+    }
+
+    public function findAllWithSearchQuery(?string $search, bool $showDeleted = false): Query
+    {
         $qb = $this->queryBuilder();
 
         if ($search) {
@@ -36,9 +42,7 @@ class CommentRepository extends ServiceEntityRepository
             $this->getEntityManager()->getFilters()->disable('softdeleteable');
         }
 
-        return $qb->orderBy('c.createdAt', 'DESC')
-            ->getQuery()
-            ->getResult();
+        return $qb->orderBy('c.createdAt', 'DESC')->getQuery();
     }
 
     /**

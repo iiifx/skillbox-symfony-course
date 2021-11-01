@@ -2,7 +2,7 @@
 
 {% block title %}{{ article.title }} - {{ parent() }}{% endblock %}
 
-{% block keywords_content %}{{ article.keywords ? article.keywords|join(',') : parent() }}{% endblock %}
+{% block keywords_content %}{{ article.tags ? article.tags|join(',') : parent() }}{% endblock %}
 
 {% block content_row_class %}{{ parent() }} no-gutters featured-border{% endblock %}
 {% block content_col_class %}article-detail{% endblock %}
@@ -14,11 +14,7 @@
                  src="{{ asset(article.imagePath) }}">
             <div class="media-body d-inline-block align-self-center">
                 <h1 class="mb-2">{{ article.title }}</h1>
-                <div class="mb-2 d-flex">
-                    {% for keyword in article.keywords %}
-                        <span class="badge badge-pill badge-secondary mr-2">{{ keyword }}</span>
-                    {% endfor %}
-                </div>
+                {% include('_partial/article/article_tags.html.twig') with {tags: article.tags} %}
                 <div class="d-flex">
                     <div class="text-muted align-self-center">
                         <img class="article-author-img rounded-circle mr-2" src="{{ article.authorAvatarPath }}">
@@ -67,7 +63,7 @@
         </div>
 
         {% for comment in article.nonDeletedComments %}
-            {{ include('articles/_article_comment.html.twig') }}
+            {% include('_partial/article/article_comment.html.twig') %}
         {% endfor %}
     </div>
 {% endblock %}
