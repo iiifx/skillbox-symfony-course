@@ -3,10 +3,12 @@
 namespace App\DataFixtures;
 
 use App\Entity\Article;
+use App\Entity\Tag;
 use DateTimeImmutable;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class ArticleFixtures extends BaseFixtures
+class ArticleFixture extends BaseFixture implements DependentFixtureInterface
 {
     protected array $articleTitles = [
         'Lorem ipsum dolor sit amet',
@@ -61,15 +63,23 @@ class ArticleFixtures extends BaseFixtures
             $article->setImageFilename($this->faker->randomElement($this->articleImages));
 
             if ($this->faker->boolean(70)) {
-                $article->setKeywords($this->faker->words($this->faker->numberBetween(2, 6)));
-            }
-            if ($this->faker->boolean(70)) {
                 $article->setPublishedAt(
                     DateTimeImmutable::createFromMutable(
                         $this->faker->dateTimeBetween('-100 days', '-1 days')
                     )
                 );
             }
+
+            for ($i = 0; $i < $this->faker->numberBetween(0, 5); $i++) {
+                $article->addTag($this->getRandomReference(Tag::class));
+            }
         });
+    }
+
+    public function getDependencies(): array
+    {
+        return [
+            TagFixture::class,
+        ];
     }
 }

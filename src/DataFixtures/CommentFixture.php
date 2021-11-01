@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class CommentFixture extends BaseFixtures implements DependentFixtureInterface
+class CommentFixture extends BaseFixture implements DependentFixtureInterface
 {
     protected array $articleAuthors = [
         'Lorem ipsum',
@@ -47,7 +47,7 @@ class CommentFixture extends BaseFixtures implements DependentFixtureInterface
     public function getDependencies(): array
     {
         return [
-            ArticleFixtures::class,
+            ArticleFixture::class,
         ];
     }
 }

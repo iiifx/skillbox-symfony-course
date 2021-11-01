@@ -10,7 +10,7 @@ use Faker\Factory;
 use Faker\Generator;
 use LogicException;
 
-abstract class BaseFixtures extends Fixture
+abstract class BaseFixture extends Fixture
 {
     protected ArticleContentProvider $articleContentProvider;
     protected CommentContentProvider $commentContentProvider;

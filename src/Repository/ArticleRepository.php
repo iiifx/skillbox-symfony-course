@@ -89,6 +89,8 @@ class ArticleRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('a')
             ->innerJoin('a.comments', 'c')
-            ->addSelect('c');
+            ->addSelect('c')
+            ->innerJoin('a.tags', 't')
+            ->addSelect('t');
     }
 }

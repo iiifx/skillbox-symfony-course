@@ -10,7 +10,7 @@ trait SoftDeleteableEntity
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    protected ?DateTimeImmutable $deletedAt = null;
+    protected $deletedAt = null;
 
     public function setDeletedAt(DateTimeImmutable $deletedAt = null): static
     {
