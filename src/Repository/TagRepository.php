@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,32 +21,26 @@ class TagRepository extends ServiceEntityRepository
         parent::__construct($registry, Tag::class);
     }
 
-    // /**
-    //  * @return Tag[] Returns an array of Tag objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findAllWithSearchQuery(?string $search, bool $showDeleted = false): Query
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this->queryBuilder();
 
-    /*
-    public function findOneBySomeField($value): ?Tag
+        if ($search) {
+            $qb->andWhere('t.name LIKE :search OR t.slug LIKE :search OR a.title LIKE :search')
+                ->setParameter('search', "%$search%");
+        }
+
+        if ($showDeleted) {
+            $this->getEntityManager()->getFilters()->disable('softdeleteable');
+        }
+
+        return $qb->orderBy('t.createdAt', 'DESC')->getQuery();
+    }
+
+    private function queryBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->innerJoin('t.articles', 'a')
+            ->addSelect('a');
     }
-    */
 }

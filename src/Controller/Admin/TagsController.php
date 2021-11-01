@@ -3,19 +3,20 @@
 namespace App\Controller\Admin;
 
 use App\Repository\CommentRepository;
+use App\Repository\TagRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CommentsController extends AbstractController
+class TagsController extends AbstractController
 {
-    #[Route('/admin/comments', name: 'app_admin_comments')]
-    public function index(Request $request, CommentRepository $commentRepository, PaginatorInterface $paginator): Response
+    #[Route('/admin/tags', name: 'app_admin_tags')]
+    public function index(Request $request, TagRepository $tagRepository, PaginatorInterface $paginator): Response
     {
         $pagination = $paginator->paginate(
-            $commentRepository->findAllWithSearchQuery(
+            $tagRepository->findAllWithSearchQuery(
                 $request->query->get('q'),
                 $request->query->has('showDeleted'),
             ),
@@ -23,7 +24,7 @@ class CommentsController extends AbstractController
             $request->query->get('perPage', 20)
         );
 
-        return $this->render('admin/comments/comments.html.twig', [
+        return $this->render('admin/tags/tags.html.twig', [
             'pagination' => $pagination,
         ]);
     }

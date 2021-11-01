@@ -62,7 +62,8 @@ class Article
      */
     private $comments;
     /**
-     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="articles")
+     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="articles", fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"createdAt"= "DESC"})
      */
     private $tags;
 
