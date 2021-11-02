@@ -20,11 +20,7 @@ class UserFixture extends BaseFixture
             $user->setFirstName($this->faker->firstName);
 
             // hash the password (based on the security.yaml config for the $user class)
-            $hashedPassword = $this->passwordHasher->hashPassword(
-                $user,
-                '123456'
-            );
-            $user->setPassword($hashedPassword);
+            $user->setPassword($this->passwordHasher->hashPassword($user, '123456'));
         });
     }
 }
