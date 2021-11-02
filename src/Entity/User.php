@@ -35,6 +35,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $firstName;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive;
 
     public function getId(): ?int
     {
@@ -133,6 +137,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFirstName(?string $firstName): self
     {
         $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }
