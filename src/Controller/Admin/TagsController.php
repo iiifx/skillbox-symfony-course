@@ -2,7 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Repository\CommentRepository;
 use App\Repository\TagRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;

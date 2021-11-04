@@ -16,8 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class CommentsController extends AbstractController
 {
     #[Route('/admin/comments', name: 'app_admin_comments')]
-    public function index(Request $request, CommentRepository $commentRepository, PaginatorInterface $paginator): Response
-    {
+    public function index(
+        Request $request,
+        CommentRepository $commentRepository,
+        PaginatorInterface $paginator
+    ): Response {
         //$this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $pagination = $paginator->paginate(
