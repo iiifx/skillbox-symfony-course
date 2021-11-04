@@ -39,7 +39,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
         $user = $this->userRepository->findOneBy(['email' => $email]);
         if ($user && !$user->isActive()) {
-            throw new CustomUserMessageAuthenticationException('Go away babayka!');
+            throw new CustomUserMessageAuthenticationException('User not active');
         }
 
         return new Passport(
