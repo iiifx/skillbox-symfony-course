@@ -152,4 +152,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getAvatarUrl(int $size = null): string
+    {
+        return sprintf(
+            'https://robohash.org/%s.jpg?set=set4%s',
+            mb_strtolower(str_replace(' ', '_', $this->firstName)),
+            $size ? "&size={$size}x$size" : '',
+        );
+    }
 }
