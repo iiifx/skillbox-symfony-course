@@ -36,6 +36,8 @@ class UserFixture extends BaseFixture
             $user->setPassword($this->passwordHasher->hashPassword($user, '123456'));
 
             $manager->persist(new ApiToken($user));
+            $manager->persist(new ApiToken($user));
+            $manager->persist(new ApiToken($user));
         });
 
         $this->createMany(User::class, 10, function (User $user) use ($manager) {
