@@ -1,0 +1,4 @@
+### Authorization by token
+POST https://127.0.0.1:8000/api/user
+Accept: application/json
+Authorization: Bearer e3886c8ce998686b96e49798b4b55902765ffadc
