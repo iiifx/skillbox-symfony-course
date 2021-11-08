@@ -42,7 +42,7 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
         if (!$apiToken || $apiToken->isExpired()) {
             throw new CustomUserMessageAuthenticationException('Token missing or expired');
         }
-        if (!$apiToken->getUser()) {
+        if (!$apiToken->getUser() || !$apiToken->getUser()->isActive()) {
             throw new CustomUserMessageAuthenticationException('User not found');
         }
 

@@ -2,18 +2,23 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Security\LoginFormAuthenticator;
+use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class SecurityController extends AbstractController
 {
     /**
      * @Route("/login", name="app_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils)
     {
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');
@@ -25,6 +30,41 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+
+    /**
+     * @Route("/register", name="app_register")
+     */
+    public function register(
+        Request $request,
+        EntityManagerInterface $em,
+        UserPasswordHasherInterface $passwordHasher,
+        UserAuthenticatorInterface $authenticator,
+        LoginFormAuthenticator $formAuthenticator
+    ) {
+        if ($request->isMethod(Request::METHOD_POST)) {
+            $user = new User();
+            $user->setEmail($request->request->get('email'));
+            $user->setFirstName($request->request->get('firstName'));
+            $user->setPassword(
+                $passwordHasher->hashPassword(
+                    $user,
+                    $request->request->get('password')
+                )
+            );
+            $user->setIsActive(true);
+
+            $em->persist($user);
+            $em->flush();
+
+            return $authenticator->authenticateUser(
+                $user,
+                $formAuthenticator,
+                $request
+            );
+        }
+
+        return $this->render('security/register.html.twig', ['error' => '']);
     }
 
     /**
