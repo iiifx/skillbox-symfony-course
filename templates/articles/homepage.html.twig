@@ -37,8 +37,8 @@
                                     {% include('_partial/article/article_tags.html.twig') with {tags: article.tags} %}
                                     <div class="d-flex justify-content-between">
                                         <div class="text-muted align-self-center">
-                                            <img class="article-author-img rounded-circle" src="{{ article.authorAvatarPath }}">
-                                            {{ article.author }}
+                                            <img class="article-author-img rounded-circle" src="{{ article.author.avatarUrl }}">
+                                            {{ article.author.firstName }}
                                         </div>
                                         <div class="text-muted align-self-center">
                                             {{ article.publishedAt|ago }}

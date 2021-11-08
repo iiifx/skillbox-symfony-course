@@ -22,40 +22,36 @@ class Article
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private ?int $id = null;
+    private $id;
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private ?string $title = null;
+    private $title;
     /**
      * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(type="string", length=100, unique=true)
      */
-    private ?string $slug = null;
+    private $slug;
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private ?string $body = null;
+    private $body;
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private ?DateTimeImmutable $publishedAt = null;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private ?string $author = null;
+    private $publishedAt;
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private ?int $likeCount = null;
+    private $likeCount;
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private ?string $imageFilename = null;
+    private $imageFilename;
     /**
      * @ORM\Column(type="string", length=100)
      */
-    private ?string $description = null;
+    private $description;
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"createdAt"= "DESC"})
@@ -66,6 +62,11 @@ class Article
      * @ORM\OrderBy({"createdAt"= "DESC"})
      */
     private $tags;
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="articles")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $author;
 
     public function __construct()
     {
@@ -126,18 +127,6 @@ class Article
         return $this;
     }
 
-    public function getAuthor(): ?string
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(?string $author): self
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
     public function getLikeCount(): ?int
     {
         return $this->likeCount;
@@ -165,14 +154,6 @@ class Article
     public function getImagePath(): string
     {
         return sprintf('images/%s', $this->getImageFilename());
-    }
-
-    public function getAuthorAvatarPath(): string
-    {
-        return sprintf(
-            'https://robohash.org/%s.png?set=set4',
-            str_replace(' ', '-', $this->getAuthor())
-        );
     }
 
     public function addLike(int $count = 1): static
@@ -265,6 +246,18 @@ class Article
     public function removeTag(Tag $tag): self
     {
         $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

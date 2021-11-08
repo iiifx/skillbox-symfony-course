@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Article;
 use App\Entity\Tag;
+use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -58,7 +59,7 @@ class ArticleFixture extends BaseFixture implements DependentFixtureInterface
             //$article->setSlug(sprintf('article-slug-%d', $this->faker->numberBetween(1, 100000)));
             $article->setDescription($this->faker->words(3, true));
 
-            $article->setAuthor($this->faker->randomElement($this->articleAuthors));
+            $article->setAuthor($this->getRandomReference(User::class));
             $article->setLikeCount($this->faker->numberBetween(-10, 100));
             $article->setImageFilename($this->faker->randomElement($this->articleImages));
 
@@ -80,6 +81,7 @@ class ArticleFixture extends BaseFixture implements DependentFixtureInterface
     {
         return [
             TagFixture::class,
+            UserFixture::class,
         ];
     }
 }
