@@ -48,7 +48,7 @@ class ArticleFixture extends BaseFixture implements DependentFixtureInterface
 
     public function loadData(ObjectManager $manager): void
     {
-        $this->createMany(Article::class, 50, function (Article $article) {
+        $this->createMany(Article::class, 25, function (Article $article) {
             $paragraphs = $this->faker->numberBetween(2, 10);
             $wordParams = $this->faker->boolean(70) ? ['WORD', 5] : [];
             $content = $this->articleContentProvider->get($paragraphs, ...$wordParams);
