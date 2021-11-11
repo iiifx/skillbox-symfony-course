@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -78,7 +79,7 @@ class ArticleRepository extends ServiceEntityRepository
         return $qb->andWhere('a.publishedAt IS NOT NULL');
     }
 
-    protected function orderLatest(QueryBuilder $qb = null): QueryBuilder
+    public function orderLatest(QueryBuilder $qb = null): QueryBuilder
     {
         $qb ??= $this->queryBuilder();
 
