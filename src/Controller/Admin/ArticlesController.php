@@ -34,7 +34,10 @@ class ArticlesController extends AbstractController
     public function index(Request $request): Response
     {
         $pagination = $this->paginator->paginate(
-            $this->articleRepository->orderLatest(),
+            $this->articleRepository->findAllWithSearchQuery(
+                $request->query->get('q'),
+                true
+            ),
             $request->query->getInt('page', 1),
             $request->query->get('perPage', 20)
         );
@@ -56,9 +59,6 @@ class ArticlesController extends AbstractController
             if (!$article instanceof Article) {
                 throw new LogicException();
             }
-
-            $article->setPublishedAt(new DateTimeImmutable());
-            $article->setDescription('...');
 
             $this->em->persist($article);
             $this->em->flush();

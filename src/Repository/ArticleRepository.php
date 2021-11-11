@@ -21,6 +21,25 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
+    public function findAllWithSearchQuery(?string $search, bool $showDeleted = false): Query
+    {
+        $qb = $this->queryBuilder()
+            ->innerJoin('a.author', 'au')
+            ->addSelect('au');
+
+        if ($search) {
+            $qb
+                ->andWhere('a.title LIKE :search OR a.body LIKE :search OR au.firstName LIKE :search')
+                ->setParameter('search', "%$search%");
+        }
+
+        if ($showDeleted) {
+            $this->getEntityManager()->getFilters()->disable('softdeleteable');
+        }
+
+        return $qb->orderBy('a.createdAt', 'DESC')->getQuery();
+    }
+
     public function findBySlug(string $slug, bool $publishedOnly = true): ?Article
     {
         $qb = $this->queryBuilder();
@@ -86,7 +105,7 @@ class ArticleRepository extends ServiceEntityRepository
         return $qb->orderBy('a.publishedAt', 'DESC');
     }
 
-    protected function queryBuilder(): QueryBuilder
+    public function queryBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('a')
             ->innerJoin('a.comments', 'c')

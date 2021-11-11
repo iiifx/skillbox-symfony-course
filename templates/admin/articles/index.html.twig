@@ -5,7 +5,7 @@
 {% block content %}
     <h1>Управление статьями ({{ pagination.totalItemCount }})</h1>
 
-{#    {% include('_partial/admin/form.html.twig') %}#}
+    {% include('_partial/admin/article/form.html.twig') %}
 
     <table class="table table-striped">
         <thead>
@@ -26,6 +26,11 @@
                 <td>{{ article.author.firstName }}</td>
                 <td>
                     <i class="fas fa-{{ article.isPublished ? "check" : "times" }}"></i>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    {{ article.description }}
                 </td>
             </tr>
         {% else %}
