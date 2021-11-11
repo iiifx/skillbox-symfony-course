@@ -57,7 +57,6 @@ class ArticlesController extends AbstractController
                 throw new LogicException();
             }
 
-            $article->setAuthor($this->getUser());
             $article->setPublishedAt(new DateTimeImmutable());
             $article->setDescription('...');
 
