@@ -6,13 +6,12 @@ use App\Entity\Article;
 use App\Entity\User;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
-use App\Repository\CommentRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use LogicException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -49,9 +48,44 @@ class ArticlesController extends AbstractController
 
     #[Route('/admin/articles/create', name: 'app_admin_article_create')]
     #[IsGranted('ROLE_ADMIN_ARTICLE')]
-    public function create(Request $request)
+    public function create(Request $request): Response
     {
         $form = $this->createForm(ArticleFormType::class);
+
+        if ($this->handleFormRequest($form, $request)) {
+            $this->addFlash('flash_message', 'Успешно создано');
+
+            return $this->redirectToRoute('app_admin_articles');
+        }
+
+        return $this->render('admin/articles/create.html.twig', [
+            'articleForm' => $form->createView(),
+            'showError' => $form->isSubmitted(),
+        ]);
+    }
+
+    #[Route('/admin/articles/{id}/edit', name: 'app_admin_article_edit')]
+    #[IsGranted('MANAGE', subject: 'article')]
+    public function edit(Article $article, Request $request): Response
+    {
+        $form = $this->createForm(ArticleFormType::class, $article);
+
+        if ($this->handleFormRequest($form, $request)) {
+            $this->addFlash('flash_message', 'Успешно изменено');
+
+            return $this->redirectToRoute('app_admin_article_edit', [
+                'id' => $article->getId()
+            ]);
+        }
+
+        return $this->render('admin/articles/edit.html.twig', [
+            'articleForm' => $form->createView(),
+            'showError' => $form->isSubmitted(),
+        ]);
+    }
+
+    private function handleFormRequest(FormInterface $form, Request $request): ?Article
+    {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -63,20 +97,9 @@ class ArticlesController extends AbstractController
             $this->em->persist($article);
             $this->em->flush();
 
-            $this->addFlash('flash_message', 'Успешно создано');
-
-            return $this->redirectToRoute('app_admin_articles');
+            return $article;
         }
 
-        return $this->render('admin/articles/create.html.twig', [
-            'articleForm' => $form->createView(),
-        ]);
-    }
-
-    #[Route('/admin/articles/{id}/edit', name: 'app_admin_article_edit')]
-    #[IsGranted('MANAGE', subject: 'article')]
-    public function edit(Article $article)
-    {
-        return new Response('...');
+        return null;
     }
 }
