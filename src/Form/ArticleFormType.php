@@ -13,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class ArticleFormType extends AbstractType
 {
@@ -27,14 +29,32 @@ class ArticleFormType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Название статьи',
+                'constraints' => [
+                    new Length([
+                        'min' => 3,
+                        'minMessage' => 'Длина названия должна быть больше 3 знаков'
+                    ]),
+                    new Regex([
+                        'pattern' => '/\d+/',
+                        'match' => false,
+                        'message' => 'Нельзя создать статью, название которой содержит цифру',
+                    ])
+                ]
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Описание статьи',
                 'attr' => ['rows' => 3],
+                'constraints' => [
+                    new Length([
+                        'max' => 100,
+                        'maxMessage' => 'Длина описания не должна превышать 100 знаков'
+                    ])
+                ]
             ])
             ->add('body', TextareaType::class, [
                 'label' => 'Содержимое статьи',
                 'attr' => ['rows' => 10],
+                'required' => true,
             ])
             ->add('publishedAt', options: [
                 'widget' => 'single_text',
@@ -48,6 +68,7 @@ class ArticleFormType extends AbstractType
                 'choice_label' => static fn(User $user) => sprintf('#%d %s', $user->getId(), $user->getFirstName()),
                 'placeholder' => 'Выберите автора статьи',
                 'choices' => $this->userRepository->findAllSorted(),
+                'required' => true,
             ]);
 
         $transformer = new CallbackTransformer(

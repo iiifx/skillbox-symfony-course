@@ -10,9 +10,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
+ * @Assert\EnableAutoMapping()
  */
 class Article
 {
@@ -28,12 +31,14 @@ class Article
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"api"})
+     * @Assert\NotBlank(message="У статьи должно быть название")
      */
     private $title;
     /**
      * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(type="string", length=100, unique=true)
      * @Groups({"api"})
+     * @Assert\DisableAutoMapping()
      */
     private $slug;
     /**
@@ -97,7 +102,7 @@ class Article
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
 
@@ -290,5 +295,17 @@ class Article
         $this->keywords = $keywords;
 
         return $this;
+    }
+
+    /**
+     * @Assert\Callback()
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if (mb_stripos($this->title, 'собака') !== false) {
+            $context->buildViolation('О собаках писать запрещено!')
+                ->atPath('title')
+                ->addViolation();
+        }
     }
 }
