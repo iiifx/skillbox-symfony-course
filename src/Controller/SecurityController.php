@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserRegistrationFormType;
 use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
@@ -42,14 +43,18 @@ class SecurityController extends AbstractController
         UserAuthenticatorInterface $authenticator,
         LoginFormAuthenticator $formAuthenticator
     ) {
-        if ($request->isMethod(Request::METHOD_POST)) {
-            $user = new User();
-            $user->setEmail($request->request->get('email'));
-            $user->setFirstName($request->request->get('firstName'));
+        $form = $this->createForm(UserRegistrationFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            if (!$user instanceof User) {
+                throw new LogicException();
+            }
             $user->setPassword(
                 $passwordHasher->hashPassword(
                     $user,
-                    $request->request->get('password')
+                    $form->get('plainPassword')->getData()
                 )
             );
             $user->setIsActive(true);
@@ -64,7 +69,9 @@ class SecurityController extends AbstractController
             );
         }
 
-        return $this->render('security/register.html.twig', ['error' => '']);
+        return $this->render('security/register.html.twig', [
+            'registrationForm' => $form->createView(),
+        ]);
     }
 
     /**
