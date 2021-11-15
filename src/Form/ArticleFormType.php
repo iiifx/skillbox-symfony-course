@@ -8,7 +8,6 @@ use App\Homework\ArticleWordsFilter;
 use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,6 +18,8 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 class ArticleFormType extends AbstractType
 {
+    private array $options;
+
     public function __construct(
         protected UserRepository $userRepository,
         protected ArticleWordsFilter $articleWordsFilter
@@ -27,6 +28,8 @@ class ArticleFormType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $this->options = $options;
+
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Название статьи',
@@ -59,10 +62,6 @@ class ArticleFormType extends AbstractType
                 'rows' => 10,
                 'required' => true,
             ])
-            ->add('publishedAt', options: [
-                'widget' => 'single_text',
-                'label' => 'Дата публикации статьи',
-            ])
             ->add('keywords', options: [
                 'label' => 'Ключевые слова статьи',
             ])
@@ -72,14 +71,23 @@ class ArticleFormType extends AbstractType
                 'placeholder' => 'Выберите автора статьи',
                 'choices' => $this->userRepository->findAllSorted(),
                 'required' => true,
+                'disabled' => !$this->canEditArticle(),
             ]);
 
-        $transformer = new CallbackTransformer(
-            fn($fromDb) => $fromDb,
-            fn($fromInput) => $this->articleWordsFilter->filter((string)$fromInput, ['стакан']),
-        );
-        $builder->get('description')->addModelTransformer($transformer);
-        $builder->get('body')->addModelTransformer($transformer);
+        if ($options['enabled_published_at']) {
+            $builder
+                ->add('publishedAt', options: [
+                    'widget' => 'single_text',
+                    'label' => 'Дата публикации статьи',
+                ]);
+        }
+
+        //$transformer = new CallbackTransformer(
+        //    fn($fromDb) => $fromDb,
+        //    fn($fromInput) => $this->articleWordsFilter->filter((string)$fromInput, ['стакан']),
+        //);
+        //$builder->get('description')->addModelTransformer($transformer);
+        //$builder->get('body')->addModelTransformer($transformer);
 
         //$builder->get('body')->addModelTransformer(
         //    new CallbackTransformer(
@@ -93,6 +101,19 @@ class ArticleFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Article::class,
+            'enabled_published_at' => false,
         ]);
+    }
+
+    private function getArticle(): ?Article
+    {
+        return $this->options['data'] ?? null;
+    }
+
+    private function canEditArticle(): bool
+    {
+        $article = $this->getArticle();
+
+        return !($article?->getId() && $article?->isPublished());
     }
 }

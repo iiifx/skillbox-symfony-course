@@ -8,9 +8,11 @@
     {{ form_row(articleForm.body, {
         "label": "Тело статьи"
     }) }}
-    {{ form_row(articleForm.publishedAt, {
-        "label": "Дата публикации"
-    }) }}
+    {% if articleForm.publishedAt is defined %}
+        {{ form_row(articleForm.publishedAt, {
+            "label": "Дата публикации"
+        }) }}
+    {% endif %}
     {{ form_row(articleForm.keywords, {
         "label": "Ключевые слова"
     }) }}
