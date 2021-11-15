@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\User;
+use App\Form\DTO\UserRegistrationDTO;
 use App\Homework\RegistrationSpamFilter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -27,44 +27,42 @@ class UserRegistrationFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'constraints' => [
-                    new Callback(
-                        function ($email, ExecutionContextInterface $context, $payload) {
-                            if ($this->spamFilter->filter($email)) {
-                                $context->buildViolation('Ботам здесь не место')
-                                    ->atPath('email')
-                                    ->addViolation();
-                            }
-                        }
-                    )
-                ]
+                //'constraints' => [
+                //    new Callback(
+                //        function ($email, ExecutionContextInterface $context, $payload) {
+                //            if ($this->spamFilter->filter($email)) {
+                //                $context->buildViolation('Ботам здесь не место')
+                //                    ->atPath('email')
+                //                    ->addViolation();
+                //            }
+                //        }
+                //    )
+                //]
             ])
             ->add('firstName')
             ->add('plainPassword', PasswordType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Пароль не указан'
-                    ]),
-                    new Length([
-                        'min' => 6,
-                    ])
-                ]
+                //'constraints' => [
+                //    new NotBlank([
+                //        'message' => 'Пароль не указан'
+                //    ]),
+                //    new Length([
+                //        'min' => 6,
+                //    ])
+                //]
             ])
             ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'Необходимо согласиться с правилами',
-                    ])
-                ]
+                //'constraints' => [
+                //    new IsTrue([
+                //        'message' => 'Необходимо согласиться с правилами',
+                //    ])
+                //]
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => UserRegistrationDTO::class,
         ]);
     }
 }
