@@ -68,7 +68,9 @@ class ArticlesController extends AbstractController
     #[IsGranted('MANAGE', subject: 'article')]
     public function edit(Article $article, Request $request): Response
     {
-        $form = $this->createForm(ArticleFormType::class, $article);
+        $form = $this->createForm(ArticleFormType::class, $article, [
+            'enabled_published_at' => true,
+        ]);
 
         if ($this->handleFormRequest($form, $request)) {
             $this->addFlash('flash_message', 'Успешно изменено');
