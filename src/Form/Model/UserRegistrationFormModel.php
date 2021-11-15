@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Form\DTO;
+namespace App\Form\Model;
 
+use App\Validator\RegistrationSpam;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\UniqueUser;
 
-class UserRegistrationDTO
+class UserRegistrationFormModel
 {
     #[Assert\NotBlank(message: 'Почта не указана')]
     #[Assert\Email()]
     #[UniqueUser()]
+    #[RegistrationSpam(message: 'Ваш e-mail не одобрен спам-фильтром')]
     public ?string $email = null;
 
     public ?string $firstName = null;
@@ -18,6 +20,6 @@ class UserRegistrationDTO
     #[Assert\Length(min: 6)]
     public ?string $plainPassword = null;
 
-    #[Assert\IsTrue(message: 'Необходимо согласиться с правилам')]
+    #[Assert\IsTrue(message: 'Необходимо согласиться с правилами')]
     public bool $agreeTerms = false;
 }

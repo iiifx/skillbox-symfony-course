@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\DTO\UserRegistrationDTO;
+use App\Form\Model\UserRegistrationFormModel;
 use App\Form\UserRegistrationFormType;
 use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -49,7 +49,7 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $DTO = $form->getData();
-            if (!$DTO instanceof UserRegistrationDTO) {
+            if (!$DTO instanceof UserRegistrationFormModel) {
                 throw new LogicException();
             }
 
