@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
 class ArticleFormType extends AbstractType
@@ -43,8 +44,10 @@ class ArticleFormType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Описание статьи',
-                'attr' => ['rows' => 3],
                 'constraints' => [
+                    new NotBlank([
+                        'message' => 'Необходимо заполнить описание'
+                    ]),
                     new Length([
                         'max' => 100,
                         'maxMessage' => 'Длина описания не должна превышать 100 знаков'
@@ -53,7 +56,7 @@ class ArticleFormType extends AbstractType
             ])
             ->add('body', TextareaType::class, [
                 'label' => 'Содержимое статьи',
-                'attr' => ['rows' => 10],
+                'rows' => 10,
                 'required' => true,
             ])
             ->add('publishedAt', options: [
@@ -73,7 +76,7 @@ class ArticleFormType extends AbstractType
 
         $transformer = new CallbackTransformer(
             fn($fromDb) => $fromDb,
-            fn($fromInput) => $this->articleWordsFilter->filter($fromInput, ['стакан']),
+            fn($fromInput) => $this->articleWordsFilter->filter((string)$fromInput, ['стакан']),
         );
         $builder->get('description')->addModelTransformer($transformer);
         $builder->get('body')->addModelTransformer($transformer);
