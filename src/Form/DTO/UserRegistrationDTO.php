@@ -3,11 +3,13 @@
 namespace App\Form\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\UniqueUser;
 
 class UserRegistrationDTO
 {
     #[Assert\NotBlank(message: 'Почта не указана')]
     #[Assert\Email()]
+    #[UniqueUser()]
     public ?string $email = null;
 
     public ?string $firstName = null;
