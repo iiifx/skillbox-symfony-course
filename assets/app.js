@@ -13,4 +13,5 @@ import $ from 'jquery';
 // yarn add bootstrap@4.6.0 --dev
 require('bootstrap');
 
-import './like.js';
+import './like';
+import './bootstrap_file_field';

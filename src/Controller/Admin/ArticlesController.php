@@ -12,9 +12,11 @@ use LogicException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @method User|null getUser()
@@ -24,7 +26,8 @@ class ArticlesController extends AbstractController
     public function __construct(
         protected EntityManagerInterface $em,
         protected ArticleRepository $articleRepository,
-        protected PaginatorInterface $paginator
+        protected PaginatorInterface $paginator,
+        protected SluggerInterface $slugger,
     ) {
     }
 
@@ -95,6 +98,20 @@ class ArticlesController extends AbstractController
             if (!$article instanceof Article) {
                 throw new LogicException();
             }
+
+            /** @var UploadedFile|null $uploadedImage */
+            $uploadedImage = $form->get('image')->getData();
+
+            $imageFilename = $this->slugger
+                ->slug(pathinfo($uploadedImage->getClientOriginalName(), PATHINFO_FILENAME))
+                ->append('-', microtime(true))
+                ->append('.', $uploadedImage->guessExtension())
+                ->toString();
+
+            $uploadsDir = $this->getParameter('uploads_articles_dir');
+            $newImage = $uploadedImage->move($uploadsDir, $imageFilename);
+
+            $article->setImageFilename($imageFilename);
 
             $this->em->persist($article);
             $this->em->flush();

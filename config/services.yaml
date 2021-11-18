@@ -9,6 +9,8 @@ parameters:
     app.example_email: '%env(APP_EXAMPLE_EMAIL)%'
     cache_adapter: cache.adapter.filesystem
     secret_value: '%env(SECRET_VALUE)%'
+    uploads_articles: 'uploads/articles'
+    uploads_articles_dir: '%kernel.project_dir%/public/%uploads_articles%'
 
 services:
     # default configuration for services in *this* file

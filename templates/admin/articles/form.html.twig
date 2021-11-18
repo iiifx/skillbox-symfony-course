@@ -1,4 +1,7 @@
 {{ form_start(articleForm) }}
+    {{ form_row(articleForm.image, {
+        "label": "Изображение"
+    }) }}
     {{ form_row(articleForm.title, {
         "label": "Название статьи"
     }) }}
