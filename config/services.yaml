@@ -11,6 +11,8 @@ parameters:
     secret_value: '%env(SECRET_VALUE)%'
     uploads_articles: 'uploads/articles'
     uploads_articles_dir: '%kernel.project_dir%/public/%uploads_articles%'
+    uploads_avatars: 'uploads/avatars'
+    uploads_avatars_dir: '%kernel.project_dir%/public/%uploads_avatars%'
 
 services:
     # default configuration for services in *this* file
@@ -21,7 +23,11 @@ services:
         bind:
             $debug: "%kernel.debug%"
             $apiLogger: '@monolog.logger.api'
-#            $markdownLogger: "@monolog.logger.markdown"
+            # $markdownLogger: "@monolog.logger.markdown"
+            App\Service\FileUploader $articleFileUploader: '@file_uploader.article'
+            App\Service\FileUploader $avatarFileUploader: '@file_uploader.avatar'
+
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -38,6 +44,14 @@ services:
     App\Service\ArticleContentProvider:
         arguments:
             $boldWords: "%env(bool:MARK_ARTICLE_WORDS_WITH_BOLD)%"
+    file_uploader.article:
+        class: App\Service\FileUploader
+        arguments:
+            $uploadPath: "%uploads_articles_dir%"
+    file_uploader.avatar:
+        class: App\Service\FileUploader
+        arguments:
+            $uploadPath: "%uploads_avatars_dir%"
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

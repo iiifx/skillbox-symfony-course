@@ -5,9 +5,12 @@ namespace App\DataFixtures;
 use App\Entity\Article;
 use App\Entity\Tag;
 use App\Entity\User;
+use App\Service\FileUploader;
 use DateTimeImmutable;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 
 class ArticleFixture extends BaseFixture implements DependentFixtureInterface
 {
@@ -46,6 +49,12 @@ class ArticleFixture extends BaseFixture implements DependentFixtureInterface
         'dogs/08.jpg',
     ];
 
+    public function __construct(
+        protected FileUploader $articleFileUploader
+    ) {
+    }
+
+
     public function loadData(ObjectManager $manager): void
     {
         $this->createMany(Article::class, 25, function (Article $article) {
@@ -61,7 +70,18 @@ class ArticleFixture extends BaseFixture implements DependentFixtureInterface
 
             $article->setAuthor($this->getRandomReference(User::class));
             $article->setLikeCount($this->faker->numberBetween(-10, 100));
-            $article->setImageFilename($this->faker->randomElement($this->articleImages));
+
+            $filePath = sprintf(
+                '%s/public/images/%s',
+                dirname(__DIR__, 2),
+                $this->faker->randomElement($this->articleImages)
+            );
+            $tempPath = sys_get_temp_dir() . '/' . pathinfo($filePath, PATHINFO_FILENAME);
+            (new Filesystem())->copy($filePath, $tempPath, true);
+
+            $file = $this->articleFileUploader->uploadFile(new File($tempPath));
+
+            $article->setImageFilename($file->getFilename());
 
             if ($this->faker->boolean(70)) {
                 $article->setPublishedAt(

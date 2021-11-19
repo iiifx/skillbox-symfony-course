@@ -13,8 +13,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
 
 class ArticleFormType extends AbstractType
@@ -31,13 +33,23 @@ class ArticleFormType extends AbstractType
     {
         $this->options = $options;
 
-        $builder
-            ->add('image', FileType::class, [
-                'mapped' => false,
-                'attr' => [
-                    'placeholder' => 'Выберите изображение'
-                ]
+        $imageConstraints = [
+            new Image([
+                'maxSize' => '5M',
+                //'mimeTypes' => [
+                //    'image/jpeg',
+                //    'image/png',
+                //],
+                //'mimeTypesMessage' => 'Можно загрузить только изображения'
             ])
+        ];
+        if (!$this->getArticle() || !$this->getArticle()->getImageFilename()) {
+            $imageConstraints[] = new NotNull([
+                'message' => 'Необходимо добавить файл',
+            ]);
+        }
+
+        $builder
             ->add('title', TextType::class, [
                 'label' => 'Название статьи',
                 'constraints' => [
@@ -79,6 +91,14 @@ class ArticleFormType extends AbstractType
                 'choices' => $this->userRepository->findAllSorted(),
                 'required' => true,
                 'disabled' => !$this->canEditArticle(),
+            ])
+            ->add('image', FileType::class, [
+                'mapped' => false,
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Выберите изображение'
+                ],
+                'constraints' => $imageConstraints,
             ]);
 
         if ($options['enabled_published_at']) {

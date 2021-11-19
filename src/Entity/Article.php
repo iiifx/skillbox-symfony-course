@@ -90,6 +90,8 @@ class Article
     {
         $this->comments = new ArrayCollection();
         $this->tags = new ArrayCollection();
+
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int

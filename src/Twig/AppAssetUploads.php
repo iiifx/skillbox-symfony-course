@@ -16,7 +16,7 @@ class AppAssetUploads implements RuntimeExtensionInterface
     ) {
     }
 
-    public function assetUploads(string $config, string $path): string
+    public function assetUploads(string $config, ?string $path): string
     {
         return $this->packages->getUrl(
             $this->parameterBag->get($config) . '/' . $path

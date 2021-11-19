@@ -6,6 +6,8 @@ use App\Entity\Article;
 use App\Entity\User;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
+use App\Service\FileUploader;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use LogicException;
@@ -16,7 +18,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @method User|null getUser()
@@ -27,7 +28,7 @@ class ArticlesController extends AbstractController
         protected EntityManagerInterface $em,
         protected ArticleRepository $articleRepository,
         protected PaginatorInterface $paginator,
-        protected SluggerInterface $slugger,
+        protected FileUploader $articleFileUploader,
     ) {
     }
 
@@ -98,20 +99,15 @@ class ArticlesController extends AbstractController
             if (!$article instanceof Article) {
                 throw new LogicException();
             }
+            if (!$article->getPublishedAt()) {
+                $article->setPublishedAt(new DateTimeImmutable());
+            }
 
-            /** @var UploadedFile|null $uploadedImage */
-            $uploadedImage = $form->get('image')->getData();
-
-            $imageFilename = $this->slugger
-                ->slug(pathinfo($uploadedImage->getClientOriginalName(), PATHINFO_FILENAME))
-                ->append('-', microtime(true))
-                ->append('.', $uploadedImage->guessExtension())
-                ->toString();
-
-            $uploadsDir = $this->getParameter('uploads_articles_dir');
-            $newImage = $uploadedImage->move($uploadsDir, $imageFilename);
-
-            $article->setImageFilename($imageFilename);
+            /** @var UploadedFile|null $uploadedFile */
+            if ($uploadedFile = $form->get('image')->getData()) {
+                $file = $this->articleFileUploader->uploadFile($uploadedFile);
+                $article->setImageFilename($file->getBasename());
+            }
 
             $this->em->persist($article);
             $this->em->flush();

@@ -1,24 +1,33 @@
 {{ form_start(articleForm) }}
+    {% if articleForm.vars.data.imageFilename|default %}
+        <img src="{{ asset_uploads('uploads_articles', articleForm.vars.data.imageFilename) }}" alt="Preview" height="120">
+    {% endif %}
     {{ form_row(articleForm.image, {
         "label": "Изображение"
     }) }}
+
     {{ form_row(articleForm.title, {
         "label": "Название статьи"
     }) }}
+
     {{ form_row(articleForm.description, {
         "label": "Описание"
     }) }}
+
     {{ form_row(articleForm.body, {
         "label": "Тело статьи"
     }) }}
+
     {% if articleForm.publishedAt is defined %}
         {{ form_row(articleForm.publishedAt, {
             "label": "Дата публикации"
         }) }}
     {% endif %}
+
     {{ form_row(articleForm.keywords, {
         "label": "Ключевые слова"
     }) }}
+
     {{ form_row(articleForm.author, {
         "label": "Автор"
     }) }}
