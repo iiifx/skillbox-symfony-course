@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
- * @Assert\EnableAutoMapping()
+ * @//Assert\EnableAutoMapping()
  */
 class Article
 {
@@ -90,6 +90,8 @@ class Article
     {
         $this->comments = new ArrayCollection();
         $this->tags = new ArrayCollection();
+
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -172,11 +174,6 @@ class Article
         $this->imageFilename = $imageFilename;
 
         return $this;
-    }
-
-    public function getImagePath(): string
-    {
-        return sprintf('images/%s', $this->getImageFilename());
     }
 
     public function addLike(int $count = 1): static

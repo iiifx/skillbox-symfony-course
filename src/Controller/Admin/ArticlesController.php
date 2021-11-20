@@ -6,12 +6,15 @@ use App\Entity\Article;
 use App\Entity\User;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
+use App\Service\FileUploader;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use LogicException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +27,8 @@ class ArticlesController extends AbstractController
     public function __construct(
         protected EntityManagerInterface $em,
         protected ArticleRepository $articleRepository,
-        protected PaginatorInterface $paginator
+        protected PaginatorInterface $paginator,
+        protected FileUploader $articleFileUploader,
     ) {
     }
 
@@ -94,6 +98,19 @@ class ArticlesController extends AbstractController
             $article = $form->getData();
             if (!$article instanceof Article) {
                 throw new LogicException();
+            }
+            if (!$article->getPublishedAt()) {
+                $article->setPublishedAt(new DateTimeImmutable());
+            }
+
+            /** @var UploadedFile|null $uploadedFile */
+            if ($uploadedFile = $form->get('image')->getData()) {
+                if ($article->getImageFilename()) {
+                    $this->articleFileUploader->removeFile($article->getImageFilename());
+                }
+
+                $filename = $this->articleFileUploader->uploadFile($uploadedFile);
+                $article->setImageFilename($filename);
             }
 
             $this->em->persist($article);
