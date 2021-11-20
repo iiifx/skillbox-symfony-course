@@ -24,8 +24,8 @@ liip_imagine:
         article_preview:
             quality: 75
             filters:
-                thumbnail: {size: [240, 240], mode: outbond}
+                thumbnail: {size: [480, 300]}
         article_detail:
             quality: 90
             filters:
-                thumbnail: {size: [400, 400]}
+                thumbnail: {size: [750, 500]}

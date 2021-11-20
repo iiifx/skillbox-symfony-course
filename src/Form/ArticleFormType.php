@@ -35,12 +35,12 @@ class ArticleFormType extends AbstractType
 
         $imageConstraints = [
             new Image([
-                'maxSize' => '5M',
-                //'mimeTypes' => [
-                //    'image/jpeg',
-                //    'image/png',
-                //],
-                //'mimeTypesMessage' => 'Можно загрузить только изображения'
+                'maxSize' => '2M',
+                'minWidth' => 480,
+                'minHeight' => 300,
+                'allowSquare' => false,
+                'allowLandscape' => true,
+                'allowPortrait' => false,
             ])
         ];
         if (!$this->getArticle() || !$this->getArticle()->getImageFilename()) {

@@ -105,7 +105,10 @@ class ArticlesController extends AbstractController
 
             /** @var UploadedFile|null $uploadedFile */
             if ($uploadedFile = $form->get('image')->getData()) {
-                $this->articleFileUploader->removeFile($article->getImageFilename());
+                if ($article->getImageFilename()) {
+                    $this->articleFileUploader->removeFile($article->getImageFilename());
+                }
+
                 $filename = $this->articleFileUploader->uploadFile($uploadedFile);
                 $article->setImageFilename($filename);
             }
