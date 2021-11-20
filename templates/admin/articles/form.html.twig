@@ -1,6 +1,6 @@
 {{ form_start(articleForm) }}
     {% if articleForm.vars.data.imageFilename|default %}
-        <img src="{{ asset_uploads('uploads_articles', articleForm.vars.data.imageFilename) }}" alt="Preview" height="120">
+        <img src="{{ asset_uploads('article_uploads', articleForm.vars.data.imageFilename) }}" alt="Preview" height="120">
     {% endif %}
     {{ form_row(articleForm.image, {
         "label": "Изображение"

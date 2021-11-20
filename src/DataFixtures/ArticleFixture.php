@@ -76,12 +76,10 @@ class ArticleFixture extends BaseFixture implements DependentFixtureInterface
                 dirname(__DIR__, 2),
                 $this->faker->randomElement($this->articleImages)
             );
-            $tempPath = sys_get_temp_dir() . '/' . pathinfo($filePath, PATHINFO_FILENAME);
-            (new Filesystem())->copy($filePath, $tempPath, true);
 
-            $file = $this->articleFileUploader->uploadFile(new File($tempPath));
+            $filename = $this->articleFileUploader->uploadFile(new File($filePath));
 
-            $article->setImageFilename($file->getFilename());
+            $article->setImageFilename($filename);
 
             if ($this->faker->boolean(70)) {
                 $article->setPublishedAt(

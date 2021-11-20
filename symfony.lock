@@ -142,6 +142,12 @@
     "laminas/laminas-code": {
         "version": "4.4.3"
     },
+    "league/flysystem": {
+        "version": "2.3.1"
+    },
+    "league/mime-type-detection": {
+        "version": "1.8.0"
+    },
     "liip/imagine-bundle": {
         "version": "2.7",
         "recipe": {
@@ -169,6 +175,18 @@
     },
     "nikic/php-parser": {
         "version": "v4.13.0"
+    },
+    "oneup/flysystem-bundle": {
+        "version": "4.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "4.0",
+            "ref": "3ae1b83985e89138f5443bbc2d9b8c074b497d49"
+        },
+        "files": [
+            "config/packages/oneup_flysystem.yaml"
+        ]
     },
     "php-http/client-common": {
         "version": "2.4.0"
