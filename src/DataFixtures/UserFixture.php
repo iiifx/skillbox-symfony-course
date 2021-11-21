@@ -21,6 +21,7 @@ class UserFixture extends BaseFixture
             $user->setFirstName('Admin');
             $user->setIsActive(true);
             $user->setRoles(['ROLE_ADMIN']);
+            $user->setSubscribeToNewsletter(true);
             // hash the password (based on the security.yaml config for the $user class)
             $user->setPassword($this->passwordHasher->hashPassword($user, '123456'));
 
@@ -32,6 +33,7 @@ class UserFixture extends BaseFixture
             $user->setFirstName('Api');
             $user->setIsActive(true);
             $user->setRoles(['ROLE_API']);
+            $user->setSubscribeToNewsletter(true);
             // hash the password (based on the security.yaml config for the $user class)
             $user->setPassword($this->passwordHasher->hashPassword($user, '123456'));
 
@@ -43,9 +45,8 @@ class UserFixture extends BaseFixture
         $this->createMany(User::class, 10, function (User $user) use ($manager) {
             $user->setEmail($this->faker->email);
             $user->setFirstName($this->faker->firstName);
-
             $user->setIsActive($this->faker->boolean(70));
-
+            $user->setSubscribeToNewsletter($this->faker->boolean(50));
             // hash the password (based on the security.yaml config for the $user class)
             $user->setPassword($this->passwordHasher->hashPassword($user, '123456'));
 
