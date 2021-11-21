@@ -148,6 +148,9 @@
     "league/flysystem": {
         "version": "2.3.1"
     },
+    "league/html-to-markdown": {
+        "version": "5.0.2"
+    },
     "league/mime-type-detection": {
         "version": "1.8.0"
     },
@@ -310,6 +313,9 @@
         "files": [
             "bin/console"
         ]
+    },
+    "symfony/css-selector": {
+        "version": "v5.3.4"
     },
     "symfony/debug-bundle": {
         "version": "4.1",
@@ -618,6 +624,12 @@
     },
     "symfony/yaml": {
         "version": "v5.3.6"
+    },
+    "tijsverkoyen/css-to-inline-styles": {
+        "version": "2.2.3"
+    },
+    "twig/cssinliner-extra": {
+        "version": "v3.3.3"
     },
     "twig/extra-bundle": {
         "version": "v3.3.3"

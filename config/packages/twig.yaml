@@ -3,6 +3,9 @@ twig:
     form_themes:
         - bootstrap_4_layout.html.twig
         - form/fields.html.twig
+    paths:
+        'assets/images': images
+        'assets/styles': css
 
 #    globals:
 #        parsedown: "@parsedown"

@@ -15,6 +15,7 @@
         "doctrine/orm": "^2.10",
         "http-interop/http-factory-guzzle": "^1.2",
         "knplabs/knp-paginator-bundle": "^5.7",
+        "league/html-to-markdown": "^5.0",
         "liip/imagine-bundle": "^2.7",
         "nesbot/carbon": "^2.53",
         "nexylan/slack-bundle": "^2.3",
@@ -42,6 +43,7 @@
         "symfony/validator": "5.3.*",
         "symfony/webpack-encore-bundle": "^1.12",
         "symfony/yaml": "5.3.*",
+        "twig/cssinliner-extra": "^3.3",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/string-extra": "^3.3",
         "twig/twig": "^2.12|^3.0"
