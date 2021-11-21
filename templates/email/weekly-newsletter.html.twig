@@ -9,22 +9,19 @@
                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                     <tr>
                         <td>
-                            <p>Наконец-таки ты с нами, дорогой <b>{{ email.toName }}</b>.</p>
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
-                                <tbody>
+                            <table>
                                 <tr>
-                                    <td align="right" class="image-column">
-                                        <img src="{{ email.image('@images/for-email.jpg') }}" width="80" height="80">
-                                    </td>
-                                    <td align="left">
-                                        <p>
-                                            Теперь ты можешь вместе с нами участвовать в жизни поедателей сосисок.
-                                            Обсуждать свое авто и клеветать на собак. Скорей-скорей оставь комментарии в статье про мышей.
-                                            И лови красную точку.
-                                        </p>
-                                    </td>
+                                    <th>#</th>
+                                    <th>Название</th>
+                                    <th>Посмотреть</th>
                                 </tr>
-                                </tbody>
+                                {% for article in articles %}
+                                    <tr>
+                                        <td>{{ article.id }}</td>
+                                        <td>{{ article.title }}</td>
+                                        <td><a href="{{ url('app_article_show', {slug: article.slug}) }}">Перейти</a></td>
+                                    </tr>
+                                {% endfor %}
                             </table>
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                                 <tbody>
@@ -50,4 +47,3 @@
         <!-- END MAIN CONTENT AREA -->
     </table>
 {% endblock %}
-

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Article;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -87,6 +88,18 @@ class ArticleRepository extends ServiceEntityRepository
     {
         return $this->orderLatest()
             ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Article[]
+     */
+    public function findAllPublishedLastWeek(): array
+    {
+        return $this->publishedOnly($this->orderLatest())
+            ->andWhere('a.publishedAt >= :lastWeek')
+            ->setParameter('lastWeek', new DateTime('-1 week'))
             ->getQuery()
             ->getResult();
     }
