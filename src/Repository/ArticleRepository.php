@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Article;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -125,5 +126,31 @@ class ArticleRepository extends ServiceEntityRepository
             ->addSelect('c')
             ->innerJoin('a.tags', 't')
             ->addSelect('t');
+    }
+
+    public function countCreated(DateTimeInterface $dateFrom, DateTimeInterface $dateTo): int
+    {
+        return $this->createQueryBuilder('a')
+            ->select('count(a.id)')
+            ->andWhere('a.createdAt >= :dateFrom', 'a.createdAt <= :dateTo')
+            ->setParameters([
+                'dateFrom' => $dateFrom,
+                'dateTo' => $dateTo,
+            ])
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countPublished(DateTimeInterface $dateFrom, DateTimeInterface $dateTo): int
+    {
+        return $this->createQueryBuilder('a')
+            ->select('count(a.id)')
+            ->andWhere('a.publishedAt >= :dateFrom', 'a.publishedAt <= :dateTo')
+            ->setParameters([
+                'dateFrom' => $dateFrom,
+                'dateTo' => $dateTo,
+            ])
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

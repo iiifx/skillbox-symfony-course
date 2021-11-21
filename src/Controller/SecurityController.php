@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Form\Model\UserRegistrationFormModel;
 use App\Form\UserRegistrationFormType;
 use App\Security\LoginFormAuthenticator;
-use App\Service\MailerService;
+use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -47,7 +47,7 @@ class SecurityController extends AbstractController
         UserPasswordHasherInterface $passwordHasher,
         UserAuthenticatorInterface $authenticator,
         LoginFormAuthenticator $formAuthenticator,
-        MailerService $mailer
+        Mailer $mailer
     ) {
         $form = $this->createForm(UserRegistrationFormType::class);
         $form->handleRequest($request);

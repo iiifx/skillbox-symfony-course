@@ -11,7 +11,7 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 
-class MailerService
+class Mailer
 {
     public function __construct(
         protected MailerInterface $mailer
@@ -49,7 +49,7 @@ class MailerService
     private function createFor(User $user, string $subject): TemplatedEmail
     {
         return (new TemplatedEmail())
-            ->from(new Address('noreply@project.local', 'Project'))
+            ->from(new Address('noreply@symfony.skillbox', 'Spill-Coffee-On-The-Keyboard'))
             ->to(new Address($user->getEmail(), $user->getFirstName()))
             ->subject($subject);
     }
