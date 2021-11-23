@@ -45,6 +45,11 @@ services:
     App\Service\ArticleContentProvider:
         arguments:
             $boldWords: "%env(bool:MARK_ARTICLE_WORDS_WITH_BOLD)%"
+
+    App\EventListener\ExampleEventListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onEvent }
+
     # file_uploader.article:
     #     class: App\Service\FileUploader
 
