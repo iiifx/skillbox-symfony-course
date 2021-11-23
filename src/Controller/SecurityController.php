@@ -3,21 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Events\UserRegisteredEvent;
 use App\Form\Model\UserRegistrationFormModel;
 use App\Form\UserRegistrationFormType;
 use App\Security\LoginFormAuthenticator;
-use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class SecurityController extends AbstractController
 {
@@ -47,7 +45,7 @@ class SecurityController extends AbstractController
         UserPasswordHasherInterface $passwordHasher,
         UserAuthenticatorInterface $authenticator,
         LoginFormAuthenticator $formAuthenticator,
-        Mailer $mailer
+        EventDispatcherInterface $eventDispatcher
     ) {
         $form = $this->createForm(UserRegistrationFormType::class);
         $form->handleRequest($request);
@@ -73,7 +71,7 @@ class SecurityController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            $mailer->sendWelcome($user);
+            $eventDispatcher->dispatch(new UserRegisteredEvent($user));
 
             return $authenticator->authenticateUser(
                 $user,

@@ -18,7 +18,9 @@
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                         <tr>
                             <td class="content-block">
-                                <h1><a href="{{ url('app_homepage') }}">Cat-Cas-Car</a></h1>
+                                {% block header %}
+                                    <h1><a href="{{ url('app_homepage') }}">Cat-Cas-Car</a></h1>
+                                {% endblock %}
                             </td>
                         </tr>
                     </table>

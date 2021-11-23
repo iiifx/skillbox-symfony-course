@@ -7,6 +7,7 @@ use App\Trait\Entity\SoftDeleteableEntity;
 use App\Trait\Entity\TimestampableEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
@@ -25,10 +26,12 @@ class Comment
     private ?int $id = null;
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"latestComments"})
      */
     private ?string $authorName = null;
     /**
      * @ORM\Column(type="text")
+     * @Groups({"latestComments"})
      */
     private ?string $content = null;
     /**
