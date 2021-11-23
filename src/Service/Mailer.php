@@ -46,6 +46,20 @@ class Mailer
         $this->mailer->send($email);
     }
 
+    public function sendAdminNotice(Article $article): void
+    {
+        $email = (new TemplatedEmail())
+            ->from(new Address('noreply@symfony.skillbox', 'Project'))
+            ->to('admin@symfony.skillbox')
+            ->subject('Создана новая статья')
+            ->htmlTemplate('email/admin-notice.html.twig')
+            ->context([
+                'article' => $article,
+            ]);
+
+        $this->mailer->send($email);
+    }
+
     private function createFor(User $user, string $subject): TemplatedEmail
     {
         return (new TemplatedEmail())

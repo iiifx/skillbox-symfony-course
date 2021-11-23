@@ -26,6 +26,9 @@ class PartialController extends AbstractController
     {
         $comments = $commentRepository->findLatestPublished(4);
 
-        return $this->json($comments, context: ['groups' => 'latestComments']);
+        return $this->render('_partial/latest_comments.html.twig', [
+            'latestComments' => $comments,
+        ]);
+        // return $this->json($comments, context: ['groups' => 'latestComments']);
     }
 }

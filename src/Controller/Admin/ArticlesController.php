@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Article;
 use App\Entity\User;
+use App\Events\ArticleCreatedEvent;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
 use App\Service\FileUploader;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @method User|null getUser()
@@ -29,6 +31,7 @@ class ArticlesController extends AbstractController
         protected ArticleRepository $articleRepository,
         protected PaginatorInterface $paginator,
         protected FileUploader $articleFileUploader,
+        protected EventDispatcherInterface $eventDispatcher
     ) {
     }
 
@@ -56,8 +59,10 @@ class ArticlesController extends AbstractController
     {
         $form = $this->createForm(ArticleFormType::class);
 
-        if ($this->handleFormRequest($form, $request)) {
+        if ($article = $this->handleFormRequest($form, $request)) {
             $this->addFlash('flash_message', 'Успешно создано');
+
+            $this->eventDispatcher->dispatch(new ArticleCreatedEvent($article));
 
             return $this->redirectToRoute('app_admin_articles');
         }
