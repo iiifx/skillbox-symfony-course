@@ -4,6 +4,7 @@ namespace App\EventSubscriber;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -17,16 +18,20 @@ class RequestDurationSubscriber implements EventSubscriberInterface
     ) {
     }
 
-    public function startTimer(Event $event): void
+    public function startTimer(KernelEvent $event): void
     {
-        $this->start = microtime(true);
+        if ($event->isMainRequest()) {
+            $this->start = microtime(true);
+        }
     }
 
-    public function endTimer(Event $event): void
+    public function endTimer(KernelEvent $event): void
     {
-        $ms = (microtime(true) - $this->start) * 1000;
+        if ($event->isMainRequest()) {
+            $ms = (microtime(true) - $this->start) * 1000;
 
-        $this->logger->info(sprintf('Длительность выполнения %d ms', $ms));
+            $this->logger->info(sprintf('Длительность выполнения %d ms', $ms));
+        }
     }
 
     public static function getSubscribedEvents(): array
