@@ -42,13 +42,15 @@ services:
     App\Service\MarkdownParser:
         arguments:
             $logger: "@monolog.logger.markdown"
-    App\Service\ArticleContentProvider:
-        arguments:
-            $boldWords: "%env(bool:MARK_ARTICLE_WORDS_WITH_BOLD)%"
-
     App\EventListener\ExampleEventListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onEvent }
+
+    # SkillboxSymfony\ArticleContentProviderBundle\ArticleContentProvider:
+    #     arguments:
+    #         $boldWords: "%env(bool:MARK_ARTICLE_WORDS_WITH_BOLD)%"
+    # SkillboxSymfony\ArticleContentProviderBundle\CommentContentProvider: null
+    # SkillboxSymfony\ArticleContentProviderBundle\PasteWordsService: null
 
     # file_uploader.article:
     #     class: App\Service\FileUploader

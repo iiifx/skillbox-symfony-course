@@ -9,7 +9,6 @@ use App\Service\FileUploader;
 use DateTimeImmutable;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 
 class ArticleFixture extends BaseFixture implements DependentFixtureInterface

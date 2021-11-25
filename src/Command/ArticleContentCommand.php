@@ -2,8 +2,8 @@
 
 namespace App\Command;
 
-use App\Homework\ArticleContentProviderInterface;
 use Exception;
+use SkillboxSymfony\ArticleContentProviderBundle\ArticleContentProvider;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,12 +17,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class ArticleContentCommand extends Command
 {
-    private ArticleContentProviderInterface $provider;
+    private ArticleContentProvider $provider;
 
     /**
      * @required
      */
-    public function setProvider(ArticleContentProviderInterface $provider): void
+    public function setProvider(ArticleContentProvider $provider): void
     {
         $this->provider = $provider;
     }

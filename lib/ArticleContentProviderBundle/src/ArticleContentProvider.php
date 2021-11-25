@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
-
-use App\Homework\ArticleContentProviderInterface;
+namespace SkillboxSymfony\ArticleContentProviderBundle;
 
 class ArticleContentProvider implements ArticleContentProviderInterface
 {
@@ -24,9 +22,9 @@ class ArticleContentProvider implements ArticleContentProviderInterface
         '- Turpis massa ~~tincidunt~~ dui ut **ornare** lectus. Nisi est sit amet facilisis magna etiam tempor. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Aliquam purus sit amet luctus venenatis. Dignissim diam quis enim lobortis scelerisque fermentum dui. Aliquet nibh praesent tristique magna sit amet purus gravida quis. Mauris augue neque gravida in fermentum et sollicitudin. Arcu odio ut sem nulla pharetra diam sit amet nisl. Leo in vitae turpis massa sed elementum tempus. Leo in vitae turpis massa sed. Lectus vestibulum mattis ullamcorper velit. Aliquam nulla facilisi cras fermentum odio eu feugiat. Molestie a iaculis at erat pellentesque adipiscing commodo.',
     ];
 
-    public function __construct(bool $boldWords, PasteWordsService $pasteWordsService)
+    public function __construct(PasteWordsService $pasteWordsService)
     {
-        $this->boldWords = $boldWords;
+        //$this->boldWords = $boldWords;
         $this->pasteWordsService = $pasteWordsService;
     }
 

@@ -65,7 +65,8 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "SkillboxSymfony\\ArticleContentProviderBundle\\": "lib/ArticleContentProviderBundle/src/"
         }
     },
     "autoload-dev": {

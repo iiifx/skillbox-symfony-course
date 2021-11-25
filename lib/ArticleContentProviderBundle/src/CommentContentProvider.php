@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
-
-use App\Homework\ComentContentProviderInterface;
+namespace SkillboxSymfony\ArticleContentProviderBundle;
 
 class CommentContentProvider implements ComentContentProviderInterface
 {

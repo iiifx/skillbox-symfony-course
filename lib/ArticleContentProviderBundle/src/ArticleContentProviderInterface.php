@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Homework;
+namespace SkillboxSymfony\ArticleContentProviderBundle;
 
 interface ArticleContentProviderInterface
 {
