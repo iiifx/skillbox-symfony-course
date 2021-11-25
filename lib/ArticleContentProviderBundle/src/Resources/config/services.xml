@@ -5,15 +5,24 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <defaults autowire="true" autoconfigure="true"/>
+        <!-- defaults autowire="true" autoconfigure="true"/ -->
 
-        <service id="skillbox.article_content_provider" class="SkillboxSymfony\ArticleContentProviderBundle\ArticleContentProvider" public="true"/>
-        <service id="SkillboxSymfony\ArticleContentProviderBundle\ArticleContentProvider" alias="skillbox.article_content_provider" public="false"/>
+        <service id="skillbox_symfony.article_content_provider" class="SkillboxSymfony\ArticleContentProviderBundle\ArticleContentProvider" public="true">
+            <argument/>
+            <argument type="service" id="skillbox_symfony.paste_words_service"/>
+            <argument type="service" id="skillbox_symfony.word_decorator"/>
+        </service>
+        <service id="SkillboxSymfony\ArticleContentProviderBundle\ArticleContentProvider" alias="skillbox_symfony.article_content_provider" public="false"/>
 
-        <service id="skillbox.comment_content_provider" class="SkillboxSymfony\ArticleContentProviderBundle\CommentContentProvider" public="true"/>
-        <service id="SkillboxSymfony\ArticleContentProviderBundle\CommentContentProvider" alias="skillbox.comment_content_provider" public="false"/>
+        <service id="skillbox_symfony.comment_content_provider" class="SkillboxSymfony\ArticleContentProviderBundle\CommentContentProvider" public="true">
+            <argument type="service" id="skillbox_symfony.paste_words_service"/>
+        </service>
+        <service id="SkillboxSymfony\ArticleContentProviderBundle\CommentContentProvider" alias="skillbox_symfony.comment_content_provider" public="false"/>
 
-        <service id="skillbox.paste_words_service" class="SkillboxSymfony\ArticleContentProviderBundle\PasteWordsService" public="true"/>
-        <service id="SkillboxSymfony\ArticleContentProviderBundle\PasteWordsService" alias="skillbox.paste_words_service" public="false"/>
+        <service id="skillbox_symfony.paste_words_service" class="SkillboxSymfony\ArticleContentProviderBundle\PasteWordsService" public="false"/>
+        <service id="SkillboxSymfony\ArticleContentProviderBundle\PasteWordsService" alias="skillbox_symfony.paste_words_service" public="false"/>
+
+        <service id="skillbox_symfony.article_word_decorator" class="SkillboxSymfony\ArticleContentProviderBundle\MarkdownWordDecorator" public="false"/>
+        <service id="skillbox_symfony.word_decorator" alias="skillbox_symfony.article_word_decorator" public="false"/>
     </services>
 </container>

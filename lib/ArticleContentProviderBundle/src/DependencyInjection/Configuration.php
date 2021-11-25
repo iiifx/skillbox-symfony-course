@@ -15,6 +15,7 @@ class Configuration implements ConfigurationInterface
         $children = $treeBuilder->getRootNode()->children();
 
         $children->booleanNode('is_bold')->defaultTrue()->info('Bold or Italic word style');
+        $children->scalarNode('article_word_decorator')->defaultNull()->info('Word decorator class');
 
         return $treeBuilder;
     }

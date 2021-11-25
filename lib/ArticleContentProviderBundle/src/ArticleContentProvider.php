@@ -6,9 +6,6 @@ namespace SkillboxSymfony\ArticleContentProviderBundle;
 
 class ArticleContentProvider implements ArticleContentProviderInterface
 {
-    protected bool $boldWords = false;
-    protected PasteWordsService $pasteWordsService;
-
     protected array $contents = [
         '- Lorem **ipsum** dolor sit amet, ~~consectetur~~ adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Purus sit amet luctus venenatis lectus magna fringilla urna porttitor. Sit amet cursus sit amet. Mattis molestie a iaculis at erat. Quis auctor elit sed vulputate mi. Vulputate dignissim suspendisse in est ante in nibh. Sed augue lacus viverra vitae. At in tellus integer feugiat scelerisque varius morbi. Tortor at risus viverra adipiscing at in. Rhoncus urna neque viverra justo nec ultrices.',
         '- Vitae et leo ~~duis~~ ut diam quam **nulla** porttitor massa. Justo nec ultrices dui sapien eget mi proin. Lacus vel facilisis volutpat est velit egestas dui id ornare. Nec feugiat nisl pretium fusce id velit. Sem et tortor consequat id porta nibh venenatis. Ultricies lacus sed turpis tincidunt id aliquet risus feugiat in. Tincidunt nunc pulvinar sapien et ligula. Diam sit amet nisl suscipit adipiscing bibendum est. Auctor elit sed vulputate mi sit amet mauris. Tincidunt praesent semper feugiat nibh sed. Pulvinar proin gravida hendrerit lectus a. Pharetra magna ac placerat vestibulum lectus mauris ultrices eros. Nascetur ridiculus mus mauris vitae ultricies leo integer. Lacus vestibulum sed arcu non. Metus vulputate eu scelerisque felis imperdiet proin fermentum. Tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin. Praesent semper feugiat nibh sed pulvinar proin gravida. Mauris ultrices eros in cursus turpis massa. Donec pretium vulputate sapien nec sagittis aliquam malesuada.',
@@ -22,10 +19,11 @@ class ArticleContentProvider implements ArticleContentProviderInterface
         '- Turpis massa ~~tincidunt~~ dui ut **ornare** lectus. Nisi est sit amet facilisis magna etiam tempor. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Aliquam purus sit amet luctus venenatis. Dignissim diam quis enim lobortis scelerisque fermentum dui. Aliquet nibh praesent tristique magna sit amet purus gravida quis. Mauris augue neque gravida in fermentum et sollicitudin. Arcu odio ut sem nulla pharetra diam sit amet nisl. Leo in vitae turpis massa sed elementum tempus. Leo in vitae turpis massa sed. Lectus vestibulum mattis ullamcorper velit. Aliquam nulla facilisi cras fermentum odio eu feugiat. Molestie a iaculis at erat pellentesque adipiscing commodo.',
     ];
 
-    public function __construct(PasteWordsService $pasteWordsService, bool $boldWords)
-    {
-        $this->boldWords = $boldWords;
-        $this->pasteWordsService = $pasteWordsService;
+    public function __construct(
+        protected bool $boldWords,
+        protected PasteWordsService $pasteWordsService,
+        protected WordDecoratorInterface $wordDecorator
+    ) {
     }
 
     public function get(int $paragraphs, string $word = null, int $wordsCount = 0): string
@@ -37,7 +35,7 @@ class ArticleContentProvider implements ArticleContentProviderInterface
         $content = $this->createContent($paragraphs);
 
         if (null !== $word && $wordsCount > 0) {
-            $word = $this->boldWords ? "**$word**" : "_{$word}_";
+            $word = $this->wordDecorator->decorate($word, $this->boldWords);
 
             $content = $this->pasteWordsService->paste($content, $word, $wordsCount);
         }
