@@ -290,6 +290,9 @@
             "config/packages/stof_doctrine_extensions.yaml"
         ]
     },
+    "symfony-skillbox-homework/unit-factory-bundle": {
+        "version": "dev-master"
+    },
     "symfony/asset": {
         "version": "v5.3.4"
     },

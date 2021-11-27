@@ -1,0 +1,11 @@
+symfony_skillbox_homework:
+
+    # symfony_skillbox_homework.strategy_strength
+    # symfony_skillbox_homework.strategy_health
+    # App\Homework\ZergRushStrategy
+    # App\Homework\BillGatesStrategy
+    strategy: symfony_skillbox_homework.strategy_health
+
+    unit_providers:
+        - App\Homework\Warcraft3HumanUnitProvider
+        - App\Homework\PetUnitProvider
