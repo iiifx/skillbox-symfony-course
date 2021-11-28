@@ -2,13 +2,13 @@
 
 namespace App\DataFixtures;
 
-use App\Service\ArticleContentProvider;
-use App\Service\CommentContentProvider;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
 use LogicException;
+use SkillboxSymfony\ArticleContentProviderBundle\ArticleContentProvider;
+use SkillboxSymfony\ArticleContentProviderBundle\CommentContentProvider;
 
 abstract class BaseFixture extends Fixture
 {

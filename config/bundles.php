@@ -21,4 +21,6 @@ return [
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
     Liip\ImagineBundle\LiipImagineBundle::class => ['all' => true],
     Oneup\FlysystemBundle\OneupFlysystemBundle::class => ['all' => true],
+    SkillboxSymfony\ArticleContentProviderBundle\ArticleContentProviderBundle::class => ['all' => true],
+    SymfonySkillbox\HomeworkBundle\HomeworkBundle::class => ['all' => true],
 ];
