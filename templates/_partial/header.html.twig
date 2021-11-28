@@ -1,0 +1,69 @@
+{% if is_granted('IS_IMPERSONATOR') %}
+    <div class="alert alert-warning">
+        Имперсонализация включена.
+        <a href="{{ impersonation_exit_path(path('app_homepage') ) }}">
+            Выйти
+        </a>
+    </div>
+{% endif %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 navbar-bg">
+    <div class="container py-2">
+        <a class="navbar-brand" href="{{ path('app_homepage') }}">
+            Home
+            <i class="fas fa-cat text-light"></i>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ path('app_homepage') }}"><i class="fas fa-home"></i></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav my-2 my-lg-0">
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="nav-profile-img rounded-circle" src="{{ app.user.avatarUrl(40) }}" alt="Profile">
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ path('app_account') }}">Профиль</a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a class="dropdown-item" href="{{ path('app_admin_index') }}">Панель управления</a>
+                            {% endif %}
+                            {% if is_granted('ROLE_ADMIN_ARTICLE') %}
+                                <a class="dropdown-item" href="{{ path('app_admin_article_create') }}">Создать статью</a>
+                            {% endif %}
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ path('app_logout') }}">Выйти</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="nav-item d-flex my-auto">
+                        <a class="btn btn-outline-light my-2 my-sm-0 mr-2" href="{{ path('app_login') }}">Войти</a>
+                        <a class="btn btn-outline-light my-2 my-sm-0" href="{{ path('app_register') }}">Регистрация</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{% if app.session.flashBag.peek("flash_message")|length %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-success" role="alert">
+                {% for message in app.flashes("flash_message") %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

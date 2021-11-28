@@ -1,0 +1,21 @@
+{
+    "name": "symfony-skillbox-homework/unit-factory-bundle",
+    "description": "Unit Factory Bundle",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Khomenko Vitaliy",
+            "email": "iiifx.me@gmail.com"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SymfonySkillbox\\HomeworkBundle\\": "src/"
+        }
+    },
+    "version": "dev-master"
+}

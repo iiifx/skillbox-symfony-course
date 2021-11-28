@@ -1,0 +1,48 @@
+{% extends 'base_content.html.twig' %}
+
+{% block title %}Управление тэгами{% endblock %}
+
+{% block content %}
+    <h1>Управление тэгами ({{ pagination.totalItemCount }})</h1>
+
+    {% include('_partial/admin/tag/form.html.twig') %}
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Статей</th>
+            <th>Название</th>
+            <th>Slug</th>
+            <th>Дата</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for tag in pagination %}
+            <tr>
+                <td>{{ tag.articles|length }}</td>
+                <td>{{ tag.name }}</td>
+                <td>{{ tag.slug }}</td>
+                <td>
+                    {{ tag.createdAt|ago }}
+                    {% if tag.deleted %}
+                        DELETED
+                    {% endif %}
+                </td>
+            </tr>
+            {% for article in tag.articles %}
+                <tr>
+                    <td colspan="4">
+                        {{ article.title }}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="4">Нет тэгов</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {{ knp_pagination_render(pagination) }}
+{% endblock %}

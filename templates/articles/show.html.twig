@@ -1,0 +1,71 @@
+{% extends 'base_content.html.twig' %}
+
+{% block title %}{{ article.title }} - {{ parent() }}{% endblock %}
+
+{% block keywords_content %}{{ article.tags ? article.tags|join(',') : parent() }}{% endblock %}
+
+{% block content_row_class %}{{ parent() }} no-gutters featured-border{% endblock %}
+{% block content_col_class %}article-detail{% endblock %}
+
+{% block content %}
+    <div class="col-sm-12 p-2">
+        <div class="media d-flex align-content-center">
+            <a href="{{ asset_uploads('article_uploads_url', article.imageFilename) }}" target="_blank">
+                <img class="article-detail-image align-self-start mr-3 rounded"
+                     src="{{ asset_uploads('article_uploads', article.imageFilename)|imagine_filter('article_detail') }}">
+            </a>
+            <div class="media-body d-inline-block align-self-center">
+                <h1 class="mb-2">{{ article.title }}</h1>
+                {% include('_partial/article/article_tags.html.twig') with {tags: article.tags} %}
+                <div class="d-flex">
+                    <div class="text-muted align-self-center">
+                        <img class="article-author-img rounded-circle mr-2" src="{{ article.author.avatarUrl }}">
+                        {{ article.author.firstName }}
+                    </div>
+                    <div class="text-muted align-self-center ml-4">
+                        {{ article.publishedAt ? article.publishedAt|ago : 'Неопубликовано' }}
+                    </div>
+                    <div class="text-muted align-self-center ml-4 article-detail-hearts"
+                         data-item="likes"
+                         data-mode="like"
+                         data-url="{{ path('app_article_like_change', {slug: article.slug}) }}">
+
+                        <span class="{{ article.likeCount > 0 ? 'text-success' : 'text-danger' }}">Голосов:</span>
+
+                        <span data-item="likesCount">{{ article.likeCount }}</span>
+                        <i class="far fa-heart text-danger"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mt-2 mb-4">
+        {{ article.body|markdown_cached }}
+    </div>
+
+    <div class="col-sm-12 mb-4">
+        <h3>
+            <i class="pr-3 far fa-comment text-secondary"></i>{{ article.nonDeletedComments|length }}
+            Комментария
+        </h3>
+        <hr>
+
+        <div class="row mb-4">
+            <div class="col-sm-12">
+                <div class="comment-container align-self-start col-sm-6">
+                    <div class="form-group">
+                        <textarea class="form-control" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-info">
+                        Комментировать
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        {% for comment in article.nonDeletedComments %}
+            {% include('_partial/article/article_comment.html.twig') %}
+        {% endfor %}
+    </div>
+{% endblock %}

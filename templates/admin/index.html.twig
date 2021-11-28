@@ -1,0 +1,31 @@
+{% extends 'base_content.html.twig' %}
+
+{% block title %}Admin panel{% endblock %}
+
+{% block content %}
+    <h2>Admin panel</h2>
+
+    <ul>
+        {% if is_granted('ROLE_ADMIN_ARTICLE') %}
+            <li>
+                <a href="{{ path('app_admin_articles') }}">
+                    Articles
+                </a>
+            </li>
+        {% endif %}
+        {% if is_granted('ROLE_ADMIN_COMMENT') %}
+            <li>
+                <a href="{{ path('app_admin_comments') }}">
+                    Comments
+                </a>
+            </li>
+        {% endif %}
+        {% if is_granted('ROLE_ADMIN_TAG') %}
+            <li>
+                <a href="{{ path('app_admin_tags') }}">
+                    Tags
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+{% endblock %}

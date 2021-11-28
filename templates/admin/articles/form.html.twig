@@ -1,0 +1,36 @@
+{{ form_start(articleForm) }}
+    {% if articleForm.vars.data.imageFilename|default %}
+        <img src="{{ asset_uploads('article_uploads', articleForm.vars.data.imageFilename)|imagine_filter('article_preview') }}" alt="Preview">
+    {% endif %}
+    {{ form_row(articleForm.image, {
+        "label": "Изображение статьи"
+    }) }}
+
+    {{ form_row(articleForm.title, {
+        "label": "Название статьи"
+    }) }}
+
+    {{ form_row(articleForm.description, {
+        "label": "Описание"
+    }) }}
+
+    {{ form_row(articleForm.body, {
+        "label": "Тело статьи"
+    }) }}
+
+    {% if articleForm.publishedAt is defined %}
+        {{ form_row(articleForm.publishedAt, {
+            "label": "Дата публикации"
+        }) }}
+    {% endif %}
+
+    {{ form_row(articleForm.keywords, {
+        "label": "Ключевые слова"
+    }) }}
+
+    {{ form_row(articleForm.author, {
+        "label": "Автор"
+    }) }}
+
+    <button type="submit" class="btn btn-primary">{{ button_text }}</button>
+{{ form_end(articleForm) }}
