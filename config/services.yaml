@@ -46,6 +46,15 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onEvent }
 
+    App\Homework\PetUnitProvider:
+        class: App\Homework\PetUnitProvider
+        tags:
+            - { name: 'symfony_skillbox_homework.unit_provider' }
+    App\Homework\Warcraft3HumanUnitProvider:
+        class: App\Homework\Warcraft3HumanUnitProvider
+        tags:
+            - { name: 'symfony_skillbox_homework.unit_provider' }
+
     # SkillboxSymfony\ArticleContentProviderBundle\ArticleContentProvider:
     #     arguments:
     #         $boldWords: "%env(bool:MARK_ARTICLE_WORDS_WITH_BOLD)%"

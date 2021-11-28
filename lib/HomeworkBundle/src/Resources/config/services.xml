@@ -16,13 +16,11 @@
         <!-- symfony_skillbox_homework.strategy - алиас стратегии -->
         <service id="symfony_skillbox_homework.strategy" alias="symfony_skillbox_homework.strategy_strength"/>
 
-        <service id="symfony_skillbox_homework.unit_provider" class="SymfonySkillbox\HomeworkBundle\BaseUnitProvider">
-            <tag name="symfony_skillbox_homework.unit_provider" alias="base_provider"/>
-        </service>
-        <service id="SymfonySkillbox\HomeworkBundle\BaseUnitProvider" alias="symfony_skillbox_homework.unit_provider" public="true"/>
+        <service id="symfony_skillbox_homework.unit_provider" class="SymfonySkillbox\HomeworkBundle\BaseUnitProvider" public="true"/>
+        <service id="SymfonySkillbox\HomeworkBundle\BaseUnitProvider" alias="symfony_skillbox_homework.unit_provider"/>
 
         <!-- symfony_skillbox_homework.unit_factory - сервис Фабрики юнитов -->
-        <service id="symfony_skillbox_homework.unit_factory" class="SymfonySkillbox\HomeworkBundle\UnitFactory">
+        <service id="symfony_skillbox_homework.unit_factory" class="SymfonySkillbox\HomeworkBundle\UnitFactory" public="true">
             <argument type="service" id="symfony_skillbox_homework.strategy"/>
             <argument type="tagged_iterator" tag="symfony_skillbox_homework.unit_provider"/>
         </service>

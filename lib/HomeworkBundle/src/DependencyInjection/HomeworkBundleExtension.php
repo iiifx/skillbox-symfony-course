@@ -8,7 +8,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\Reference;
 
 class HomeworkBundleExtension extends Extension
 {
@@ -26,17 +25,7 @@ class HomeworkBundleExtension extends Extension
                 $container->setAlias('symfony_skillbox_homework.strategy', $config['strategy']);
             }
 
-            $definition = $container->getDefinition('symfony_skillbox_homework.unit_factory');
-            if (empty($config['unit_providers'])) {
-                # Задаем дефолтный юнит-провайдер: base_provider
-                $definition->setArgument(1, [new Reference('symfony_skillbox_homework.unit_provider')]);
-            } else {
-                $references = [];
-                foreach ($config['unit_providers'] as $ID) {
-                    $references[] = new Reference($ID);
-                }
-                $definition->setArgument(1, $references);
-            }
+            // @see \SymfonySkillbox\HomeworkBundle\DependencyInjection\Compiler\UnitProviderPass::process
         }
     }
 

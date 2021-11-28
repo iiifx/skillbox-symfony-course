@@ -18,12 +18,12 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('strategy')
                 ->defaultNull()
                 ->info('Current unit strategy');
-        $children
-            ->arrayNode('unit_providers')
-                ->requiresAtLeastOneElement()
-                ->info('Unit provider list')
-                ->useAttributeAsKey('name')
-                ->prototype('scalar');
+        // $children
+        //     ->arrayNode('unit_providers')
+        //         ->requiresAtLeastOneElement()
+        //         ->info('Unit provider list')
+        //         ->useAttributeAsKey('name')
+        //         ->prototype('scalar');
 
         return $treeBuilder;
     }
